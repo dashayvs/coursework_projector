@@ -1,6 +1,6 @@
 pickle
 pandas==2.0.3
-streamlit==0.0.0
+streamlit==1.27.1
 filter
 torch==2.0.1+cu118
 torchaudio==2.0.2+cu118
