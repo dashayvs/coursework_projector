@@ -4,6 +4,8 @@ import streamlit as st
 from filter import filter_data
 # from bestmodel import ObjectsTextSimilarity
 
+data5 = pd.read_csv("data/data_raw_recipes.csv")
+
 st.title('Search for similar recipes')
 st.divider()
 
