@@ -2,5 +2,8 @@ pickle
 pandas
 streamlit
 filter
-torch
+torch==1.12.1
+torch-geometric==2.1.0
+torch-scatter==2.0.9
+torch-sparse==0.6.16
 sentence_transformers
