@@ -1,6 +1,6 @@
 import pandas as pd
 
-train_data = pd.read_csv("https://github.com/dashayvs/coursework_projector/blob/17544299b9b475cd84340b74191b4f413bb5afbd/data/filter_data_recipes.csv")
+train_data = pd.read_csv("data/filter_data_recipes.csv")
 
 
 def filter_data(param_list, data=train_data):
