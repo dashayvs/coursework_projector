@@ -168,7 +168,7 @@ device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 classifier = pipeline("zero-shot-classification", model="facebook/bart-large-mnli", device=device)
 
 candidate_labels_cook_meth = ['Baking', 'Boiling', 'Frying', 'Grilling', 'Steaming', 'Stewing',
-                              'Blending', 'Raw Food', 'Sous Vide', 'Freezing', 'Smoking', 'Microwave']
+                              'Raw Food', 'Sous Vide', 'Freezing', 'Smoking', 'Microwave']
 
 candidate_labels_ingr = ["Vegetables", "Fruits", "Meat", "Seafood", "Mushrooms", "Dairy", "Grains", "Nuts"]
 
