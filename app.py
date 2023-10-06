@@ -3,7 +3,7 @@ import pandas as pd
 import streamlit as st
 import torch
 from filter import filter_data
-from bestmodel import ObjectsTextSimilarity
+# from bestmodel import ObjectsTextSimilarity
 
 st.title('Search for similar recipes')
 st.divider()
