@@ -96,10 +96,10 @@ if st.button('START SEARCH'):
         if ind_for_filter == 0:
             st.warning('You have set too many restrictions, search is not possible')
         else:
-            with open('D:\\КПІ\\course\\ML_recipes\\project\\ObjectsTextSimilarityModel.pkl', 'rb') as obj:
+            with open('ObjectsTextSimilarityModel.pkl', 'rb') as obj:
                 model = pickle.load(obj)
 
-            recipes = pd.read_csv("D:\\КПІ\\course\\ML_recipes\\project\\data\\train_data_text_url.csv")
+            recipes = pd.read_csv("data/train_data_text_url.csv")
 
             top_ind = list(model.predict([recipe, ingredients], number, ind_for_filter))
             rec_url = recipes.iloc[top_ind, :].loc[:, ["URL"]].values.flatten()
