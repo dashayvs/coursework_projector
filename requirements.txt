@@ -5,6 +5,6 @@ filter
 torch==2.0.1+cu118
 torchaudio==2.0.2+cu118
 torchvision==0.15.2+cu118
--f https://data.pyg.org/whl/torch-1.13.0+cpu.html
+-f https://data.pyg.org/whl/torch-2.0.1%2Bcu118.html
 torch-scatter
 sentence_transformers
