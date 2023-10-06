@@ -2,7 +2,7 @@ import pickle
 import pandas as pd
 import streamlit as st
 from filter import filter_data
-# from bestmodel import ObjectsTextSimilarity
+from bestmodel import ObjectsTextSimilarity
 
 data5 = pd.read_csv("data/data_raw_recipes.csv")
 
