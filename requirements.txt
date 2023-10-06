@@ -1,0 +1,6 @@
+pickle
+pandas
+streamlit
+filter
+torch
+sentence_transformers
