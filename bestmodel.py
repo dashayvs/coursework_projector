@@ -2,7 +2,7 @@
 import pickle
 import numpy as np
 import pandas as pd
-import torch
+# import torch
 from sentence_transformers import SentenceTransformer
 from torch.nn.functional import cosine_similarity
 
