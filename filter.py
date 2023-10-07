@@ -23,7 +23,7 @@ def filter_data(param_list, data=train_data):
     if param_list[5] != [] and param_list[5] != [0, 100]:
         new_data = new_data.loc[(new_data["Carbs"] >= param_list[5][0]) & (new_data["Carbs"] <= param_list[5][1])]
 
-    if param_list[6] != []:
+    if param_list[6] != [] and param_list[6] != [0]:
         new_data = new_data.loc[new_data["time, mins"] <= param_list[6][0]]
 
     if new_data.shape[0] < 100:
