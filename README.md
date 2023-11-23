@@ -3,7 +3,7 @@
 **Overview**
 RECIPES RECOMENDATION - project aims to enhance the culinary experience by providing users with personalized suggestions for recipes similar to those they have shown interest in. Leveraging advanced natural language processing techniques and machine learning, this system recommends recipes that share textual similarities with the user's preferred recipes. 
 
-The project's raw data is collected by parsing recipe information from the popular recipe-sharing website, Allrecipes. This includes details such as ingredients, instructions, titles, etc.
+The project's raw data was collected by parsing recipe information from the popular recipe-sharing website, Allrecipes. This includes details such as ingredients, instructions, titles, etc.
 
 During the development of the project, 4 models were created to compare and select the best 
 *(models.py)*
