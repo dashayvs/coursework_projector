@@ -1,6 +1,6 @@
 # Recipe recommendation
 
-#**Overview**
+# **Overview**
 
 RECIPES RECOMENDATION - project aims to enhance the culinary experience by providing users with personalized suggestions for recipes similar to those they have shown interest in. Leveraging advanced natural language processing techniques and machine learning, this system recommends recipes that share textual similarities with the user's preferred recipes. 
 
