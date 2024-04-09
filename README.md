@@ -7,7 +7,11 @@ RECIPE RECOMENDATIONS - project aims to enhance the culinary experience by provi
 On this gif, an example of searching for similar recipes to the given [recipe of an apple pie](https://www.allrecipes.com/recipe/16268/apple-pie/) is provided.
 ![demo_apple_pie](https://github.com/dashayvs/recipe_recomendation/assets/101887992/b5c49868-692e-410f-aa04-fe3c0fcbab53)
 
-The project's raw data was collected by parsing recipe information from the popular recipe-sharing website, Allrecipes. This includes details such as ingredients, instructions, titles, etc.
+# **Data**
+
+The project's raw data was collected by parsing recipes information from the popular recipe-sharing website, Allrecipes. This includes details such as ingredients, instructions, titles, etc.
+
+# **Models**
 
 During the development of the project, 4 models were created to compare and select the best 
 *(models.py)*
