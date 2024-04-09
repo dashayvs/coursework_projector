@@ -16,25 +16,25 @@ The project's raw data was collected by parsing recipes information from the pop
 During the development of the project, 4 models were created to compare and select the best 
 *(models.py)*
 
--*WordsComparison Model:*
+- *WordsComparison Model:*
 
 Uses NLTK for lemmatization and stop words removal.
 Computes the number of matching unique words between a query object and each row in the dataset.
 Returns indices of rows with the highest number of matching words.
 
--*TfidfSimilarity Model:*
+- *TfidfSimilarity Model:*
 
 Combines word-level and character-level TF-IDF representations.
 Utilizes cosine similarity to measure the likeness between a query object and the entire dataset.
 Returns indices of rows with the highest similarity scores.
 
--*ObjectsTextSimilarity Model:*
+- *ObjectsTextSimilarity Model:*
 
 Employs Sentence Transformer for text embedding.
 Concatenates embeddings of different text features to create a representation for each object.
 Utilizes cosine similarity to find the most similar objects to a query.
 
--*ObjectsSimilarityFiltered Model:*
+- *ObjectsSimilarityFiltered Model:*
 
 Similar to ObjectsTextSimilarity but with an additional filtering step.
 Filters similar objects based on specific features and their values.
