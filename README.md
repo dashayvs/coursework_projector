@@ -1,7 +1,10 @@
 # Recipe recommendation
 
 **Overview**
+
 RECIPES RECOMENDATION - project aims to enhance the culinary experience by providing users with personalized suggestions for recipes similar to those they have shown interest in. Leveraging advanced natural language processing techniques and machine learning, this system recommends recipes that share textual similarities with the user's preferred recipes. 
+
+![demo_apple_pie](https://github.com/dashayvs/recipe_recomendation/assets/101887992/b5c49868-692e-410f-aa04-fe3c0fcbab53)
 
 The project's raw data was collected by parsing recipe information from the popular recipe-sharing website, Allrecipes. This includes details such as ingredients, instructions, titles, etc.
 
