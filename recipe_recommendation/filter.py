@@ -2,7 +2,7 @@ from typing import List, Any, Union
 import pandas as pd
 
 
-def filter_data(param_list: List[Any], data_path: str = "D:\\KPI\\coursework\\data\\filter_data_recipes.csv") -> Union[
+def filter_data(param_list: List[Any], data_path: str = "..\\data\\filter_data_recipes.csv") -> Union[
     int, List[int], None]:
     data = pd.read_csv(data_path)
     new_data = data.copy()

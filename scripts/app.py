@@ -1,9 +1,10 @@
 import pickle
 import pandas as pd
 import streamlit as st
-from recipe_recomendation.filter import filter_data
+from recipe_recommendation.filter import filter_data
+from recipe_recommendation.bestmodel import ObjectsTextSimilarity
 
-with open('/ObjectsTextSimilarityModel.pkl', 'rb') as obj:
+with open('../model/ObjectsTextSimilarityModel.pkl', 'rb') as obj:
     model = pickle.load(obj)
 
 st.title('Search for similar recipes')

@@ -1,5 +1,5 @@
-from recipe_recomendation.feature_eng_funcs import *
-# from recipe_recomendation.feature_eng_funcs import (
+from recipe_recommendation.feature_eng_funcs import *
+# from recipe_recommendation.feature_eng_funcs import (
 #     clean_categories0, clean_categories1, clean_categories2, singular_to_plural,
 #     clean_categories3, clean_categories4, get_meal, get_course,
 #     vegan_vegetarian, convert_time_to_minutes, get_type_cooking_batch,
