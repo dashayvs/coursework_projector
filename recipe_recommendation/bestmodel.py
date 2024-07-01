@@ -26,9 +26,10 @@ class ObjectsTextSimilarity:
                 filtr_ind: Optional[np.ndarray] = None) -> np.ndarray:
         vectors = self.model.encode(query_object_lst, convert_to_tensor=True).to(device)
         query_vector = vectors.view(-1)
-        similarities = cosine_similarity(query_vector.cpu().numpy().reshape(1, -1), self.data_embedding.cpu().numpy())
+        similarities = cosine_similarity(query_vector, self.data_embedding).cpu().numpy()
         if filtr_ind is not None:
-            similarities[0, filtr_ind] = -1
-        top_k_indices = np.argsort(similarities[0])[::-1][:top_k]
+            similarities[filtr_ind] = -1
+        top_k_indices = np.argsort(similarities)[::-1][1:top_k + 1]
 
         return top_k_indices
+

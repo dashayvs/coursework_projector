@@ -1,10 +1,13 @@
 import pickle
 import pandas as pd
 import streamlit as st
+import sys
+import os
+sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 from recipe_recommendation.filter import filter_data
 from recipe_recommendation.bestmodel import ObjectsTextSimilarity
 
-with open('../model/ObjectsTextSimilarityModel.pkl', 'rb') as obj:
+with open('D:\\recipe_recomendation\\model\\ObjectsTextSimilarityModel.pkl', 'rb') as obj:
     model = pickle.load(obj)
 
 st.title('Search for similar recipes')
@@ -100,7 +103,7 @@ if st.button('START SEARCH'):
             st.warning('You have set too many restrictions, search is not possible')
         else:
 
-            recipes = pd.read_csv("/data/train_data_text_url.csv")
+            recipes = pd.read_csv("D:\\recipe_recomendation\\data\\train_data_text_url.csv")
 
             top_ind = list(model.predict([recipe, ingredients], number, ind_for_filter))
             rec_url = recipes.iloc[top_ind, :].loc[:, ["URL"]].values.flatten()

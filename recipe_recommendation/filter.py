@@ -1,9 +1,13 @@
 from typing import List, Any, Union
 import pandas as pd
+import sys
+import os
+
+sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 
 
-def filter_data(param_list: List[Any], data_path: str = "..\\data\\filter_data_recipes.csv") -> Union[
-    int, List[int], None]:
+def filter_data(param_list: List[Any], data_path: str = "D:\\recipe_recomendation\\data\\filter_data_recipes.csv") -> \
+        Union[int, List[int], None]:
     data = pd.read_csv(data_path)
     new_data = data.copy()
 
