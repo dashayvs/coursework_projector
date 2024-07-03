@@ -3,8 +3,6 @@ import sys
 import os
 from unittest.mock import patch
 
-import pandas as pd
-
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 from recipe_recommendation.feature_eng_funcs import *
 
@@ -20,7 +18,6 @@ class TestFeatureEngineering(unittest.TestCase):
         self.assertEqual(set(clean_categories1("Dinner, Vegan, Dinner, Breakfast and Lunch").split(', ')),
                          {"Breakfast", "Dinner", "Lunch", "Vegan"})
         self.assertEqual(set(clean_categories1("Soup, Vegan, Soup, Vegan").split(', ')), {"Soup", "Vegan"})
-
 
     def test_singular_to_plural(self):
         self.assertEqual(set(singular_to_plural("Dinner, Vegan, Breakfast Recipe").split(', ')),
@@ -45,7 +42,6 @@ class TestFeatureEngineering(unittest.TestCase):
 
         self.assertEqual(set(clean_categories3("Apple Pie, Apple, Pie, Dessert").split(', ')),
                          {"Apple", "Pie", "Dessert"})
-
 
     def test_get_meal(self):
         self.assertEqual(get_meal("Dinner, Vegan"), "Dinner")

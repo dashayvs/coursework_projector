@@ -32,4 +32,3 @@ class ObjectsTextSimilarity:
         top_k_indices = np.argsort(similarities)[::-1][1:top_k + 1]
 
         return top_k_indices
-
