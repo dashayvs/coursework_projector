@@ -1,6 +1,6 @@
 from datetime import datetime
 import inflect
-from typing import List, Set
+from typing import List
 import pandas as pd
 from transformers import pipeline
 import torch
