@@ -38,20 +38,6 @@ def clean_categories1(cat_str: str) -> str:
     return cat_str
 
 
-def clean_categories2(cat_str: str) -> str:
-    lst = cat_str.split(", ")
-    unique_subcategories = set()
-    for el in lst:
-        el = el.strip()
-        if ' ' in el:
-            temp = el.split(' ')
-            if not all(item in lst for item in temp):
-                unique_subcategories.add(el)
-        else:
-            unique_subcategories.add(el)
-    return ", ".join(unique_subcategories)
-
-
 def singular_to_plural(cat_str: str) -> str:
     try:
         lst = cat_str.split(", ")
@@ -59,7 +45,7 @@ def singular_to_plural(cat_str: str) -> str:
         for i, el in enumerate(lst):
             words = el.split(" ")
             words[-1] = p.plural(words[-1])
-            if " ".join(words) in lst:
+            if len(words) > 1:
                 lst[i] = " ".join(words)
         cat_str = ", ".join(set(lst))
     except Exception as e:
@@ -148,8 +134,8 @@ def vegan_vegetarian(cat_str: str) -> str:
 
 
 def convert_time_to_minutes(time_str: str) -> int:
-    formatted_str = time_str.replace(" hr", "H").replace(" hrs", "H").replace(" mins", "M").replace(" min", "M")
-    dt: datetime = datetime.strptime(formatted_str, "%HH:%MM")
+    formatted_str = time_str.replace(" hrs", "H").replace(" hr", "H").replace(" mins", "M").replace(" min", "M")
+    dt: datetime = datetime.strptime(formatted_str, "%HH %MM")
     return dt.hour * 60 + dt.minute
 
 
@@ -173,8 +159,8 @@ def get_ingr_cat(ingredients: str) -> List[str]:
     return res_cat_ingr
 
 
-def fill_cat_ingr(row: pd.Series, result_ingr: List[Set[str]]) -> pd.Series:
-    index = row.index
+def fill_cat_ingr(row: pd.Series, result_ingr: List[list[str]]) -> pd.Series:
+    index = row.name
     for cat in result_ingr[index]:
         row[cat] = int(1)
     return row

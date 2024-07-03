@@ -11,8 +11,7 @@ import pandas as pd
 
 data = pd.read_csv("../data_raw_recipes.csv")
 
-data["Categories"] = data["Categories"].apply(clean_categories0).apply(clean_categories1).apply(
-    clean_categories2).apply(singular_to_plural).apply(clean_categories3).apply(clean_categories4)
+data["Categories"] = data["Categories"].apply(clean_categories0).apply(clean_categories1).apply(singular_to_plural).apply(clean_categories3).apply(clean_categories4)
 
 train_data = pd.DataFrame()
 train_data[['Calories', 'Fat', 'Carbs', 'Protein']] = data.loc[:, ['Calories', 'Fat', 'Carbs', 'Protein']]
