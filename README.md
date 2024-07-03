@@ -1,6 +1,6 @@
 # **Overview**
 
-RECIPE RECOMENDATIONS - project aims to enhance the culinary experience by providing users with personalized suggestions for recipes similar to those they have shown interest in. Leveraging advanced natural language processing techniques and machine learning, this system recommends recipes that share textual similarities with the user's preferred recipes. 
+RECIPE RECOMENDATIONS - project aims to enhance the culinary experience by providing users with personalized suggestions for recipes similar to those they have shown interest in. Leveraging advanced natural language processing techniques and machine learning, this system recommends recipes that share textual similarities with the user's preferred recipes.
 
 # **Example**
 
@@ -13,7 +13,7 @@ The project's raw data was collected by parsing recipes information from the pop
 
 # **Models**
 
-During the development of the project, 4 models were created to compare and select the best 
+During the development of the project, 4 models were created to compare and select the best
 *(models.py)*
 
 - *WordsComparison Model:*
@@ -44,4 +44,3 @@ Filters similar objects based on specific features and their values.
 ***Based on the validation results, it was concluded that the best model - ObjectsTextSimilarity Model***
 
 For the convenience of using this project, an api (app.py) was developed, where the user enters information, can filter if necessary and receives recipes similar to the request
-
