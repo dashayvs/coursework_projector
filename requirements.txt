@@ -1,7 +1,0 @@
-numpy~=1.26.2
-pandas~=2.1.4
-scikit_learn==1.5.0
-sentence_transformers==3.0.1
-streamlit~=1.33.0
-torch~=2.2.2+cu118
-transformers~=4.30.2
