@@ -1,22 +1,38 @@
-[tool.poetry]
-name = "recipe-recomendation"
-version = "0.1.0"
-description = ""
-authors = ["dashayvs <dashayovsa@gmail.com>"]
-readme = "README.md"
-
-[tool.poetry.dependencies]
-python = "^3.11"
-numpy = ">=1.17,<2.0"
-transformers = "^4.42.3"
-pandas = "^2.2.2"
-sentence-transformers = "^3.0.1"
-torch = "^2.3.1"
-pytest = "^8.2.2"
-scikit-learn = "^1.5.0"
-
-
-
 [build-system]
-requires = ["poetry-core"]
-build-backend = "poetry.core.masonry.api"
+build-backend = "setuptools.build_meta"
+requires = ["setuptools >= 61.0", "setuptools-scm >= 7"]
+
+[project]
+name = "recipe_recommendation"
+version = '0.0.1'
+requires-python = ">= 3.8"
+dependencies = [
+    "huggingface-hub == 0.23.4",
+    "numpy == 1.26.4",
+    "pandas == 2.2.2",
+    "pytest == 8.2.2",
+    "requests == 2.32.3",
+    "scikit-learn == 1.5.1",
+    "scipy == 1.14.0",
+    "sentence-transformers == 3.0.1",
+    "sympy == 1.13.0",
+    "torch == 2.3.1",
+    "transformers == 4.42.3"
+]
+
+[tool.mypy]
+files = ["recipe_recommendation"]
+#plugins = ["numpy.typing.mypy_plugin"]
+pretty = true
+show_error_codes = true
+strict = true
+warn_unreachable = true
+ignore_missing_imports = true
+
+[[tool.mypy.overrides]]
+module = [
+  "plotly.*",
+  "pandas.*",
+  "scipy.*",
+  "sklearn.*"
+]
