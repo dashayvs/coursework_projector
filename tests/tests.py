@@ -19,7 +19,7 @@ from recipe_recommendation.feature_eng_funcs import (
 )
 
 
-def test_clean_categories0() -> None:
+def test_clean_categories0():
     assert (
         clean_categories0("Dinner Recipes, Vegan, Vegetarian Recipes, Breakfast")
         == "Dinner, Vegan, Vegetarian, Breakfast"
