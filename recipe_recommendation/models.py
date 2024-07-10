@@ -1,4 +1,4 @@
-from typing import List, Optional, Any, Set
+from typing import List, Optional, Any, Set, Union
 import numpy as np
 import pandas as pd
 import torch
@@ -111,7 +111,7 @@ class ObjectsTextSimilarity:
 
     def predict(
         self,
-        query_object_lst: List[str],
+        query_object_lst: Union[str],
         top_k: int = 10,
         filtr_ind: Optional[np.ndarray[Any, np.dtype[Any]]] = None,
     ) -> np.ndarray[Any, np.dtype[Any]]:
@@ -159,8 +159,8 @@ class ObjectsSimilarityFiltered:
         self, query_object_text: List[str], filter_features: List[int], top_k: int = 10
     ) -> ndarray[Any, dtype[signedinteger[Any] | int64]] | List[Any]:
         self.filter_features = filter_features
-        vectors = self.model.encode(query_object_text, convert_to_tensor=True).to(
-            device
+        vectors = self.model.encode(
+            query_object_text, convert_to_tensor=True, device=device
         )
         query_vector = vectors.view(-1)
         similarities = (
