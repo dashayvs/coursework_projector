@@ -30,7 +30,7 @@ jobs:
 
     - name: Type checking with mypy
       working-directory: recipe_recommendation
-      run: mypy
+      run: mypy .
 
     - name: Run tests
       run: pytest
