@@ -31,4 +31,4 @@ jobs:
 #      run: mypy ./recipe_recommendation --install-types --non-interactive
 
     - name: Run tests
-      run: pytest
+      run: pytest ./tests
