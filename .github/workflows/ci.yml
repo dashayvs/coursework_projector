@@ -23,12 +23,14 @@ jobs:
       run: pip install .[tests]
 
     - name: Run ruff
+      working-directory: recipe_recommendation
       run: |
         ruff check .
         ruff format --diff .
 
     - name: Type checking with mypy
-      run: mypy .
+      working-directory: recipe_recommendation
+      run: mypy
 
     - name: Run tests
       run: pytest
