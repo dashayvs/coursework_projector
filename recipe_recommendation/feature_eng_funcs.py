@@ -1,6 +1,6 @@
 from datetime import datetime
 import inflect
-from typing import List
+from typing import List, cast
 import pandas as pd
 from transformers import pipeline
 import torch
@@ -207,7 +207,7 @@ def get_ingr_cat(ingredients: str) -> List[str]:
 
 
 def fill_cat_ingr(row: pd.Series, result_ingr: List[list[str]]) -> pd.Series:
-    index = row.name
+    index = cast(int, row.name)
     for cat in result_ingr[index]:
-        row[cat] = int(1)
+        row[cat] = 1
     return row

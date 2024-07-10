@@ -13,7 +13,7 @@ from sklearn.feature_extraction.text import TfidfVectorizer
 from scipy.sparse import hstack
 
 nltk.download("punkt")
-device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
+device = "cuda:0" if torch.cuda.is_available() else "cpu"
 
 
 class WordsComparison:
@@ -105,7 +105,7 @@ class ObjectsTextSimilarity:
         for name in self.name_text_features:
             text_feature: List[str] = list((self.data.loc[:, [name]]).values.flatten())
             vectors.append(
-                self.model.encode(text_feature, convert_to_tensor=True).to(device)
+                self.model.encode(text_feature, convert_to_tensor=True, device=device)
             )
         self.data_embedding = torch.cat(vectors, dim=1)
 
@@ -115,7 +115,9 @@ class ObjectsTextSimilarity:
         top_k: int = 10,
         filtr_ind: Optional[np.ndarray[Any, np.dtype[Any]]] = None,
     ) -> np.ndarray[Any, np.dtype[Any]]:
-        vectors = self.model.encode(query_object_lst, convert_to_tensor=True).to(device)
+        vectors = self.model.encode(
+            query_object_lst, convert_to_tensor=True, device=device
+        )
         query_vector = vectors.view(-1)
         similarities = cosine_similarity(
             query_vector.cpu().numpy().reshape(1, -1), self.data_embedding.cpu().numpy()
@@ -141,7 +143,7 @@ class ObjectsSimilarityFiltered:
         for name in self.name_text_features:
             text_feature = list((self.data_text.loc[:, [name]]).values.flatten())
             vectors.append(
-                self.model.encode(text_feature, convert_to_tensor=True).to(device)
+                self.model.encode(text_feature, convert_to_tensor=True, device=device)
             )
 
         self.data_embedding = torch.cat(vectors, dim=1)
