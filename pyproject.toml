@@ -27,7 +27,8 @@ dependencies = [
 tests = [
     "pytest",
     "ruff",
-    "mypy"
+    "mypy",
+    "pandas-stubs"
     ]
 
 [tool.mypy]
@@ -40,9 +41,13 @@ warn_unreachable = true
 ignore_missing_imports = true
 
 [[tool.mypy.overrides]]
+ignore_missing_imports = true
 module = [
   "plotly.*",
-  "pandas.*",
   "scipy.*",
-  "sklearn.*"
+  "sklearn.*",
+  "inflect.*",
+  "transformers.*",
+  "pattern.text.en.*",
+    "nltk.*"
 ]
