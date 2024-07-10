@@ -1,5 +1,5 @@
 # bestmodel.py
-from typing import List, Optional, Any
+from typing import List, Optional, Any, cast
 import numpy as np
 import pandas as pd
 import torch
@@ -33,6 +33,7 @@ class ObjectsTextSimilarity:
         vectors = self.model.encode(
             query_object_lst, convert_to_tensor=True, device=device
         )
+        vectors = cast(torch.Tensor, vectors)
         query_vector = vectors.view(-1)
         similarities = (
             cosine_similarity(query_vector, self.data_embedding).cpu().numpy()

@@ -1,4 +1,4 @@
-from typing import List, Optional, Any, Set, Union
+from typing import List, Optional, Any, Set, cast
 import numpy as np
 import pandas as pd
 import torch
@@ -111,13 +111,14 @@ class ObjectsTextSimilarity:
 
     def predict(
         self,
-        query_object_lst: Union[str],
+        query_object_lst: List[str],
         top_k: int = 10,
         filtr_ind: Optional[np.ndarray[Any, np.dtype[Any]]] = None,
     ) -> np.ndarray[Any, np.dtype[Any]]:
         vectors = self.model.encode(
             query_object_lst, convert_to_tensor=True, device=device
         )
+        vectors = cast(torch.Tensor, vectors)
         query_vector = vectors.view(-1)
         similarities = cosine_similarity(
             query_vector.cpu().numpy().reshape(1, -1), self.data_embedding.cpu().numpy()
@@ -162,6 +163,7 @@ class ObjectsSimilarityFiltered:
         vectors = self.model.encode(
             query_object_text, convert_to_tensor=True, device=device
         )
+        vectors = cast(torch.Tensor, vectors)
         query_vector = vectors.view(-1)
         similarities = (
             torch.nn.functional.cosine_similarity(query_vector, self.data_embedding)
