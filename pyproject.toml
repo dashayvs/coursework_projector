@@ -28,7 +28,7 @@ tests = [
     "pytest",
     "ruff",
     "mypy",
-    "pandas-stubs"
+    "inflect"
     ]
 
 [tool.mypy]
@@ -51,3 +51,9 @@ module = [
   "pattern.text.en.*",
     "nltk.*"
 ]
+
+[tool.ruff]
+line-length = 100
+
+[tool.ruff.lint.pydocstyle]
+convention = "google"
