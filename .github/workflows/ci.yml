@@ -27,8 +27,8 @@ jobs:
         ruff check ./recipe_recommendation
         ruff format --diff ./recipe_recommendation
 
-#    - name: Type checking with mypy
-#      run: mypy ./recipe_recommendation --install-types --non-interactive
+    - name: Type checking with mypy
+      run: mypy ./recipe_recommendation --install-types --non-interactive
 
     - name: Run tests
       run: pytest ./tests
