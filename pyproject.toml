@@ -51,8 +51,8 @@ module = [
     "nltk.*"
 ]
 
-[tool.ruff]
-line-length = 100
+#[tool.ruff]
+#line-length = 100
 
 [tool.ruff.lint.pydocstyle]
 convention = "google"
