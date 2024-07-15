@@ -20,7 +20,12 @@ class ObjectsTextSimilarity:
         for name in self.name_text_features:
             text_feature = list((self.data.loc[:, [name]]).values.flatten())
             vectors.append(
-                self.model.encode(text_feature, convert_to_tensor=True, device=device)
+                cast(
+                    torch.Tensor,
+                    self.model.encode(
+                        text_feature, convert_to_tensor=True, device=device
+                    ),
+                )
             )
         self.data_embedding = torch.cat(vectors, dim=1)
 
