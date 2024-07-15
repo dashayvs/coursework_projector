@@ -28,7 +28,8 @@ tests = [
     "pytest",
     "ruff",
     "mypy",
-    "inflect"
+    "inflect",
+    "pattern"
     ]
 
 [tool.mypy]
