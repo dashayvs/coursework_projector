@@ -7,9 +7,12 @@ import os
 
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
 from recipe_recommendation.filter import filter_data
+
 # from recipe_recommendation.bestmodel import ObjectsTextSimilarity
 
-with open("D:\\recipe_recomendation\\model\\ObjectsTextSimilarityModel.pkl", "rb") as obj:
+with open(
+    "D:\\recipe_recomendation\\model\\ObjectsTextSimilarityModel.pkl", "rb"
+) as obj:
     model = pickle.load(obj)
 
 st.title("Search for similar recipes")
@@ -34,11 +37,12 @@ st.markdown(
 )
 
 answ1 = st.radio("Select an option:", ["YES", "NO"], index=1)
-st.warning("Please note that too many restrictions can affect the quality of the search result")
+st.warning(
+    "Please note that too many restrictions can affect the quality of the search result"
+)
 st.divider()
 
 param_list: List[List[Any]] = [[]] * 7
-
 
 if answ1 == "YES":
     param_list[0] = st.multiselect(
@@ -116,7 +120,9 @@ if answ1 == "YES":
             max_value=50,
             value=(0, 50),
         )
-        st.write("You selected fat range between", param_list[4][0], "and", param_list[4][1])
+        st.write(
+            "You selected fat range between", param_list[4][0], "and", param_list[4][1]
+        )
 
     st.divider()
     answ5 = st.radio("Do you want to choose a carbs range?", ["YES", "NO"], index=1)
@@ -127,7 +133,9 @@ if answ1 == "YES":
             max_value=100,
             value=(0, 100),
         )
-        st.write("You selected fat range between", param_list[5][0], "and", param_list[5][1])
+        st.write(
+            "You selected fat range between", param_list[5][0], "and", param_list[5][1]
+        )
 
     st.divider()
 
@@ -160,7 +168,9 @@ if st.button("START SEARCH"):
         if ind_for_filter == 0:
             st.warning("You have set too many restrictions, search is not possible")
         else:
-            recipes = pd.read_csv("D:\\recipe_recomendation\\data\\train_data_text_url.csv")
+            recipes = pd.read_csv(
+                "D:\\recipe_recomendation\\data\\train_data_text_url.csv"
+            )
 
             top_ind = list(model.predict([recipe, ingredients], number, ind_for_filter))
             rec_url = recipes.iloc[top_ind, :].loc[:, ["URL"]].values.flatten()

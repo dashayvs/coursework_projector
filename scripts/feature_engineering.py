@@ -16,7 +16,6 @@ from recipe_recommendation.feature_eng_funcs import (
 from sklearn.preprocessing import LabelEncoder
 import pandas as pd
 
-
 data = pd.read_csv("../data_raw_recipes.csv")
 
 data["Categories"] = (
