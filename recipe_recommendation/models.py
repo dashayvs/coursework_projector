@@ -101,17 +101,13 @@ class ObjectsTextSimilarity:
     def fit(self, data: pd.DataFrame) -> None:
         self.data = data
         self.name_text_features = self.data.columns
-        vectors: List[torch.Tensor] = []
-        for name in self.name_text_features:
-            text_feature: List[str] = list((self.data.loc[:, [name]]).values.flatten())
-            vectors.append(
-                cast(
-                    torch.Tensor,
-                    self.model.encode(
-                        text_feature, convert_to_tensor=True, device=device
-                    ),
-                )
-            )
+        text_features: List[List[str]] = [
+            list(data[col].values.flatten()) for col in data.columns
+        ]
+        vectors: List[torch.Tensor] = [
+            cast(torch.Tensor, self.model.encode(text_feature, device=device))
+            for text_feature in text_features
+        ]
         self.data_embedding = torch.cat(vectors, dim=1)
 
     def predict(
@@ -120,10 +116,7 @@ class ObjectsTextSimilarity:
         top_k: int = 10,
         filtr_ind: Optional[np.ndarray[Any, np.dtype[Any]]] = None,
     ) -> np.ndarray[Any, np.dtype[Any]]:
-        vectors = self.model.encode(
-            query_object_lst, convert_to_tensor=True, device=device
-        )
-        vectors = cast(torch.Tensor, vectors)
+        vectors = cast(torch.Tensor, self.model.encode(query_object_lst, device=device))
         query_vector = vectors.view(-1)
         similarities = cosine_similarity(
             query_vector.cpu().numpy().reshape(1, -1), self.data_embedding.cpu().numpy()
@@ -145,17 +138,14 @@ class ObjectsSimilarityFiltered:
         self.data_text = data_text
         self.filter_data = filter_data
         self.name_text_features = self.data_text.columns
-        vectors = []
-        for name in self.name_text_features:
-            text_feature = list((self.data_text.loc[:, [name]]).values.flatten())
-            vectors.append(
-                cast(
-                    torch.Tensor,
-                    self.model.encode(
-                        text_feature, convert_to_tensor=True, device=device
-                    ),
-                )
-            )
+        text_features: List[List[str]] = [
+            list((self.data_text.loc[:, [name]]).values.flatten())
+            for name in data_text.columns
+        ]
+        vectors: List[torch.Tensor] = [
+            cast(torch.Tensor, self.model.encode(text_feature, device=device))
+            for text_feature in text_features
+        ]
 
         self.data_embedding = torch.cat(vectors, dim=1)
 
@@ -170,10 +160,9 @@ class ObjectsSimilarityFiltered:
         self, query_object_text: List[str], filter_features: List[int], top_k: int = 10
     ) -> ndarray[Any, dtype[signedinteger[Any] | int64]] | List[Any]:
         self.filter_features = filter_features
-        vectors = self.model.encode(
-            query_object_text, convert_to_tensor=True, device=device
+        vectors = cast(
+            torch.Tensor, self.model.encode(query_object_text, device=device)
         )
-        vectors = cast(torch.Tensor, vectors)
         query_vector = vectors.view(-1)
         similarities = (
             torch.nn.functional.cosine_similarity(query_vector, self.data_embedding)
