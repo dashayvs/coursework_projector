@@ -53,9 +53,7 @@ class TfidfSimilarity:
 
     def fit(self, text_data: pd.DataFrame) -> None:
         self.data = text_data.copy()
-        self.data["Combined_Text"] = text_data.apply(
-            lambda row: ". ".join(row.values), axis=1
-        )
+        self.data["Combined_Text"] = text_data.apply(lambda row: ". ".join(row.values), axis=1)
         self.word_vectorizer = TfidfVectorizer(
             analyzer="word",
             ngram_range=(1, 2),
@@ -101,9 +99,7 @@ class ObjectsTextSimilarity:
     def fit(self, data: pd.DataFrame) -> None:
         self.data = data
         self.name_text_features = self.data.columns
-        text_features: List[List[str]] = [
-            list(data[col].values.flatten()) for col in data.columns
-        ]
+        text_features: List[List[str]] = [list(data[col].values.flatten()) for col in data.columns]
         vectors: List[torch.Tensor] = [
             cast(torch.Tensor, self.model.encode(text_feature, device=device))
             for text_feature in text_features
@@ -139,8 +135,7 @@ class ObjectsSimilarityFiltered:
         self.filter_data = filter_data
         self.name_text_features = self.data_text.columns
         text_features: List[List[str]] = [
-            list((self.data_text.loc[:, [name]]).values.flatten())
-            for name in data_text.columns
+            list((self.data_text.loc[:, [name]]).values.flatten()) for name in data_text.columns
         ]
         vectors: List[torch.Tensor] = [
             cast(torch.Tensor, self.model.encode(text_feature, device=device))
@@ -150,24 +145,16 @@ class ObjectsSimilarityFiltered:
         self.data_embedding = torch.cat(vectors, dim=1)
 
     def _filter(self, row: pd.Series) -> int:
-        return sum(
-            1
-            for col, value in zip(row.index, self.filter_features)
-            if row[col] == value
-        )
+        return sum(1 for col, value in zip(row.index, self.filter_features) if row[col] == value)
 
     def predict(
         self, query_object_text: List[str], filter_features: List[int], top_k: int = 10
     ) -> ndarray[Any, dtype[signedinteger[Any] | int64]] | List[Any]:
         self.filter_features = filter_features
-        vectors = cast(
-            torch.Tensor, self.model.encode(query_object_text, device=device)
-        )
+        vectors = cast(torch.Tensor, self.model.encode(query_object_text, device=device))
         query_vector = vectors.view(-1)
         similarities = (
-            torch.nn.functional.cosine_similarity(query_vector, self.data_embedding)
-            .cpu()
-            .numpy()
+            torch.nn.functional.cosine_similarity(query_vector, self.data_embedding).cpu().numpy()
         )
 
         similar_indices_len = len(np.where(similarities >= 0.8)[0])

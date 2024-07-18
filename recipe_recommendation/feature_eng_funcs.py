@@ -9,9 +9,7 @@ from pattern.text.en import singularize
 import re
 
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
-CLASSIFIER = pipeline(
-    "zero-shot-classification", model="facebook/bart-large-mnli", device=device
-)
+CLASSIFIER = pipeline("zero-shot-classification", model="facebook/bart-large-mnli", device=device)
 
 COOK_METH = [
     "Baking",
@@ -177,10 +175,7 @@ def vegan_vegetarian(cat_str: str) -> str:
 
 def convert_time_to_minutes(time_str: str) -> int:
     formatted_str = (
-        time_str.replace(" hrs", "H")
-        .replace(" hr", "H")
-        .replace(" mins", "M")
-        .replace(" min", "M")
+        time_str.replace(" hrs", "H").replace(" hr", "H").replace(" mins", "M").replace(" min", "M")
     )
     dt: datetime = datetime.strptime(formatted_str, "%HH %MM")
     return dt.hour * 60 + dt.minute

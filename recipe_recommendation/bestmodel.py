@@ -16,9 +16,7 @@ class ObjectsTextSimilarity:
     def fit(self, data: pd.DataFrame) -> None:
         self.data = data
         self.name_text_features = self.data.columns
-        text_features: List[List[str]] = [
-            list(data[col].values.flatten()) for col in data.columns
-        ]
+        text_features: List[List[str]] = [list(data[col].values.flatten()) for col in data.columns]
         vectors: List[torch.Tensor] = [
             cast(torch.Tensor, self.model.encode(text_feature, device=device))
             for text_feature in text_features

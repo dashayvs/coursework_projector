@@ -22,26 +22,22 @@ def filter_data(
 
     if param_list[2] != [] and param_list[2] != [0, 1000]:
         new_data = new_data.loc[
-            (new_data["Calories"] >= param_list[2][0])
-            & (new_data["Calories"] <= param_list[2][1])
+            (new_data["Calories"] >= param_list[2][0]) & (new_data["Calories"] <= param_list[2][1])
         ]
 
     if param_list[3] != [] and param_list[3] != [0, 40]:
         new_data = new_data.loc[
-            (new_data["Protein"] >= param_list[3][0])
-            & (new_data["Protein"] <= param_list[3][1])
+            (new_data["Protein"] >= param_list[3][0]) & (new_data["Protein"] <= param_list[3][1])
         ]
 
     if param_list[4] != [] and param_list[4] != [0, 50]:
         new_data = new_data.loc[
-            (new_data["Fat"] >= param_list[4][0])
-            & (new_data["Fat"] <= param_list[4][1])
+            (new_data["Fat"] >= param_list[4][0]) & (new_data["Fat"] <= param_list[4][1])
         ]
 
     if param_list[5] != [] and param_list[5] != [0, 100]:
         new_data = new_data.loc[
-            (new_data["Carbs"] >= param_list[5][0])
-            & (new_data["Carbs"] <= param_list[5][1])
+            (new_data["Carbs"] >= param_list[5][0]) & (new_data["Carbs"] <= param_list[5][1])
         ]
 
     if param_list[6] != [] and param_list[6] != [0]:
