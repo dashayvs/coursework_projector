@@ -16,17 +16,13 @@ class ObjectsTextSimilarity:
     def fit(self, data: pd.DataFrame) -> None:
         self.data = data
         self.name_text_features = self.data.columns
-        vectors = []
-        for name in self.name_text_features:
-            text_feature = list((self.data.loc[:, [name]]).values.flatten())
-            vectors.append(
-                cast(
-                    torch.Tensor,
-                    self.model.encode(
-                        text_feature, convert_to_tensor=True, device=device
-                    ),
-                )
-            )
+        text_features: List[List[str]] = [
+            list(data[col].values.flatten()) for col in data.columns
+        ]
+        vectors: List[torch.Tensor] = [
+            cast(torch.Tensor, self.model.encode(text_feature, device=device))
+            for text_feature in text_features
+        ]
         self.data_embedding = torch.cat(vectors, dim=1)
 
     def predict(
@@ -35,16 +31,13 @@ class ObjectsTextSimilarity:
         top_k: int = 10,
         filtr_ind: Optional[np.ndarray[Any, np.dtype[Any]]] = None,
     ) -> np.ndarray[Any, np.dtype[Any]]:
-        vectors = self.model.encode(
-            query_object_lst, convert_to_tensor=True, device=device
-        )
-        vectors = cast(torch.Tensor, vectors)
+        vectors = cast(torch.Tensor, self.model.encode(query_object_lst, device=device))
         query_vector = vectors.view(-1)
-        similarities = (
-            cosine_similarity(query_vector, self.data_embedding).cpu().numpy()
+        similarities = cosine_similarity(
+            query_vector.cpu().numpy().reshape(1, -1), self.data_embedding.cpu().numpy()
         )
         if filtr_ind is not None:
-            similarities[filtr_ind] = -1
-        top_k_indices = np.argsort(similarities)[::-1][1 : top_k + 1]
+            similarities[0, filtr_ind] = -1
+        top_k_indices = np.argsort(similarities[0])[::-1][:top_k]
 
         return top_k_indices
