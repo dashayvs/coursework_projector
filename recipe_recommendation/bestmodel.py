@@ -5,6 +5,7 @@ import pandas as pd
 import torch
 from sentence_transformers import SentenceTransformer
 from torch.nn.functional import cosine_similarity
+import numpy.typing as npt
 
 device = "cuda:0" if torch.cuda.is_available() else "cpu"
 
@@ -16,8 +17,8 @@ class ObjectsTextSimilarity:
     def fit(self, data: pd.DataFrame) -> None:
         self.data = data
         self.name_text_features = self.data.columns
-        vectors: List[np.ndarray] = [
-            cast(np.ndarray, self.model.encode(data[col], convert_to_numpy=True, device=device))
+        vectors: List[npt.NDArray] = [
+            self.model.encode(data[col], convert_to_numpy=True, device=device)
             for col in data.columns
         ]
         self.data_embedding = np.concatenate(vectors, axis=1)
