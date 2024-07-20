@@ -16,12 +16,10 @@ class ObjectsTextSimilarity:
     def fit(self, data: pd.DataFrame) -> None:
         self.data = data
         self.name_text_features = self.data.columns
-        text_features: List[List[str]] = [list(data[col].values.flatten()) for col in data.columns]
-        vectors: List[torch.Tensor] = [
-            cast(torch.Tensor, self.model.encode(text_feature, device=device))
-            for text_feature in text_features
+        vectors: List[np.ndarray] = [
+            self.model.encode(data[col], device=device) for col in data.columns
         ]
-        self.data_embedding = torch.cat(vectors, dim=1)
+        self.data_embedding = np.concatenate(vectors, axis=1)
 
     def predict(
         self,
@@ -36,6 +34,6 @@ class ObjectsTextSimilarity:
         )
         if filtr_ind is not None:
             similarities[0, filtr_ind] = -1
-        top_k_indices = np.argsort(similarities[0])[::-1][:top_k]
+        top_k_indices = np.argsort(similarities[0])[: top_k - 1 : -1]
 
         return top_k_indices
