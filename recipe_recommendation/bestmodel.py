@@ -17,7 +17,7 @@ class ObjectsTextSimilarity:
         self.data = data
         self.name_text_features = self.data.columns
         vectors: List[np.ndarray] = [
-            self.model.encode(data[col], convert_to_numpy=True, device=device).cpu().numpy()
+            cast(np.ndarray, self.model.encode(data[col], convert_to_numpy=True, device=device))
             for col in data.columns
         ]
         self.data_embedding = np.concatenate(vectors, axis=1)
