@@ -1,5 +1,5 @@
 # bestmodel.py
-from typing import List, Optional, Any, cast
+from typing import Any, cast
 import numpy as np
 import pandas as pd
 import torch
@@ -17,26 +17,26 @@ class ObjectsTextSimilarity:
     def fit(self, data: pd.DataFrame) -> None:
         self.data = data
         self.name_text_features = self.data.columns
-        vectors: List[npt.NDArray[np.float32]] = [
+        vectors: list[torch.Tensor] = [
             cast(
-                npt.NDArray[np.float32],
-                self.model.encode(data[col], convert_to_numpy=True, device=device),
+                torch.Tensor,
+                self.model.encode(data[col], convert_to_tensor=True, device=device),
             )
             for col in data.columns
         ]
-        self.data_embedding = np.concatenate(vectors, axis=1)
+        self.data_embedding = torch.cat(vectors, dim=1)
 
     def predict(
         self,
-        query_object_lst: List[str],
+        query_object_lst: list[str],
         top_k: int = 10,
-        filtr_ind: Optional[np.ndarray[Any, np.dtype[Any]]] = None,
-    ) -> np.ndarray[Any, np.dtype[Any]]:
-        vectors = cast(torch.Tensor, self.model.encode(query_object_lst, device=device))
-        query_vector = vectors.view(-1)
-        similarities = cosine_similarity(
-            query_vector.cpu().numpy().reshape(1, -1), self.data_embedding.cpu().numpy()
+        filtr_ind: npt.NDArray[Any] | None = None,
+    ) -> npt.NDArray[Any]:
+        query_vector = cast(
+            torch.Tensor, self.model.encode(query_object_lst, convert_to_tensor=True, device=device)
         )
+        similarities = cosine_similarity(query_vector.view(-1), self.data_embedding)
+
         if filtr_ind is not None:
             similarities[0, filtr_ind] = -1
         top_k_indices = np.argsort(similarities[0])[: top_k - 1 : -1]
