@@ -17,8 +17,11 @@ class ObjectsTextSimilarity:
     def fit(self, data: pd.DataFrame) -> None:
         self.data = data
         self.name_text_features = self.data.columns
-        vectors: List[npt.NDArray] = [
-            cast(npt.NDArray, self.model.encode(data[col], convert_to_numpy=True, device=device))
+        vectors: List[npt.NDArray[np.float32]] = [
+            cast(
+                npt.NDArray[np.float32],
+                self.model.encode(data[col], convert_to_numpy=True, device=device),
+            )
             for col in data.columns
         ]
         self.data_embedding = np.concatenate(vectors, axis=1)
