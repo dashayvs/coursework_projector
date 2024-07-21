@@ -18,10 +18,7 @@ class ObjectsTextSimilarity:
         self.data = data
         self.name_text_features = self.data.columns
         vectors: list[torch.Tensor] = [
-            cast(
-                torch.Tensor,
-                self.model.encode(data[col], convert_to_tensor=True, device=device),
-            )
+            cast(torch.Tensor, self.model.encode(data[col], convert_to_tensor=True, device=device))
             for col in data.columns
         ]
         self.data_embedding = torch.cat(vectors, dim=1)
@@ -39,6 +36,6 @@ class ObjectsTextSimilarity:
 
         if filtr_ind is not None:
             similarities[0, filtr_ind] = -1
-        top_k_indices = np.argsort(similarities[0])[: top_k - 1 : -1]
+        top_k_indices = np.argsort(similarities[0])[: -1 * top_k - 1 : -1]
 
         return top_k_indices
