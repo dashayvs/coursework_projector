@@ -32,10 +32,11 @@ class ObjectsTextSimilarity:
         query_vector = cast(
             torch.Tensor, self.model.encode(query_object_lst, convert_to_tensor=True, device=device)
         )
-        similarities = cosine_similarity(query_vector.view(-1), self.data_embedding)
+        similarities = cosine_similarity(query_vector.view(-1), self.data_embedding).numpy()
 
         if filtr_ind is not None:
-            similarities[0, filtr_ind] = -1
+            similarities[filtr_ind] = -1
+
         top_k_indices = np.argsort(similarities[0])[: -1 * top_k - 1 : -1]
 
         return top_k_indices
