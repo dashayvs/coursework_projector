@@ -1,5 +1,5 @@
 # bestmodel.py
-from typing import Any, cast
+from typing import cast
 import numpy as np
 import pandas as pd
 import torch
@@ -18,8 +18,8 @@ class ObjectsTextSimilarity:
         self.data = data
         self.name_text_features = self.data.columns
         vectors: list[torch.Tensor] = [
-            cast(torch.Tensor, self.model.encode(data[col], convert_to_tensor=True, device=device))
-            for col in data.columns
+            cast(torch.Tensor, self.model.encode(series.values, convert_to_tensor=True))
+            for _, series in data.items()
         ]
         self.data_embedding = torch.cat(vectors, dim=1)
 
@@ -27,16 +27,16 @@ class ObjectsTextSimilarity:
         self,
         query_object_lst: list[str],
         top_k: int = 10,
-        filtr_ind: npt.NDArray[Any] | None = None,
-    ) -> npt.NDArray[Any]:
+        filtr_ind: npt.NDArray[np.int64] | None = None,
+    ) -> npt.NDArray[np.int64]:
         query_vector = cast(
             torch.Tensor, self.model.encode(query_object_lst, convert_to_tensor=True, device=device)
         )
-        similarities = cosine_similarity(query_vector.view(-1), self.data_embedding).numpy()
+        similarities = cosine_similarity(query_vector.view(-1), self.data_embedding).cpu().numpy()
 
         if filtr_ind is not None:
-            similarities[filtr_ind] = -1
+            similarities[filtr_ind] = -1.0
 
-        top_k_indices = np.argsort(similarities[0])[: -1 * top_k - 1 : -1]
+        top_k_indices = np.argsort(similarities)[: -top_k - 1 : -1]
 
         return top_k_indices
