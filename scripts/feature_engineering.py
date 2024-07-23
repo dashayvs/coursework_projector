@@ -40,9 +40,7 @@ train_data[["Vegetables", "Fruits", "Meat", "Mushrooms", "Dairy", "Grains", "Nut
 train_data["Cooking Methods"] = get_type_cooking_batch(data["Directions"].tolist())
 
 result_ingredients = list(data["Ingr"].apply(get_ingr_cat))
-train_data = train_data.apply(
-    lambda row: fill_cat_ingr(row, result_ingredients), axis=1
-)
+train_data = train_data.apply(lambda row: fill_cat_ingr(row, result_ingredients), axis=1)
 
 new_order = [
     "Calories",
