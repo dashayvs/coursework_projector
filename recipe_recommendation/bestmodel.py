@@ -6,7 +6,7 @@ from sentence_transformers import SentenceTransformer
 from torch.nn.functional import cosine_similarity
 import numpy.typing as npt
 
-device = "cuda:0" if torch.cuda.is_available() else "cpu"
+# device = "cuda:0" if torch.cuda.is_available() else "cpu"
 
 
 class ObjectsTextSimilarity:
@@ -17,9 +17,10 @@ class ObjectsTextSimilarity:
         self.data = data
         self.name_text_features = self.data.columns
         vectors: list[torch.Tensor] = [
-            self.model.encode(series.values, convert_to_tensor=True, device=device)
+            self.model.encode(series.values, normalize_embeddings=True)
             for _, series in data.items()
         ]
+        # !!
         self.data_embedding = torch.cat(vectors, dim=1)
 
     def predict(
@@ -28,8 +29,9 @@ class ObjectsTextSimilarity:
         top_k: int = 10,
         filtr_ind: npt.NDArray[np.int64] | None = None,
     ) -> npt.NDArray[np.int64]:
-        query_vector = self.model.encode(query_object_lst, convert_to_tensor=True, device=device)
+        query_vector = self.model.encode(query_object_lst, normalize_embeddings=True)
 
+        # !!
         similarities = cosine_similarity(query_vector.view(-1), self.data_embedding).cpu().numpy()
 
         if filtr_ind is not None:
