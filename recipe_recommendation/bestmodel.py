@@ -1,5 +1,4 @@
 # bestmodel.py
-from typing import cast
 import numpy as np
 import pandas as pd
 import torch
@@ -29,9 +28,8 @@ class ObjectsTextSimilarity:
         top_k: int = 10,
         filtr_ind: npt.NDArray[np.int64] | None = None,
     ) -> npt.NDArray[np.int64]:
-        query_vector = cast(
-            torch.Tensor, self.model.encode(query_object_lst, convert_to_tensor=True, device=device)
-        )
+        query_vector = self.model.encode(query_object_lst, convert_to_tensor=True, device=device)
+
         similarities = cosine_similarity(query_vector.view(-1), self.data_embedding).cpu().numpy()
 
         if filtr_ind is not None:
