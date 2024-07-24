@@ -20,16 +20,17 @@ dependencies = [
     "sentence-transformers == 2.2.2",
     "sympy == 1.13.0",
     "torch == 2.3.1",
-    "transformers == 4.37.2"
+    "transformers == 4.37.2",
+    "inflect",
+    "pattern"
 ]
 
 [project.optional-dependencies]
 tests = [
     "pytest",
     "ruff",
-    "mypy",
-    "inflect",
-    "pattern"
+    "mypy"
+
     ]
 
 [tool.mypy]
