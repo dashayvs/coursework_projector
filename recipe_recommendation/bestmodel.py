@@ -12,8 +12,7 @@ class ObjectsTextSimilarity:
     def fit(self, data: pd.DataFrame) -> None:
         self.data = data
         vectors: list[npt.NDArray[np.float32]] = [
-            self.model.encode(series.values, convert_to_numpy=True, normalize_embeddings=True)
-            for _, series in data.items()
+            self.model.encode(series.values) for _, series in data.items()
         ]
         self.data_embedding = np.hstack(vectors)
 
@@ -23,16 +22,7 @@ class ObjectsTextSimilarity:
         top_k: int = 10,
         filtr_ind: npt.NDArray[np.int64] | None = None,
     ) -> npt.NDArray[np.int64]:
-        query_vector = np.hstack(
-            self.model.encode(query_object_lst, convert_to_numpy=True, normalize_embeddings=True)
-        )
-
-        # if isinstance(self.data_embedding, torch.Tensor):
-        #     self.data_embedding = self.data_embedding.cpu().numpy()
-        #     print(1)
-        # if isinstance(query_vector, torch.Tensor):
-        #     query_vector = query_vector.cpu().numpy()
-        #     print(2)
+        query_vector = np.hstack(self.model.encode(query_object_lst))
 
         similarities = self.model.similiarity(self.data_embedding, query_vector).numpy()
 
