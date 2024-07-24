@@ -18,7 +18,10 @@ class ObjectsTextSimilarity:
         self.data = data
         self.name_text_features = self.data.columns
         vectors: list[torch.Tensor] = [
-            cast(torch.Tensor, self.model.encode(series.values, convert_to_tensor=True))
+            cast(
+                torch.Tensor,
+                self.model.encode(series.values, convert_to_tensor=True, device=device),
+            )
             for _, series in data.items()
         ]
         self.data_embedding = torch.cat(vectors, dim=1)
