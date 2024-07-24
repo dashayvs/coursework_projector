@@ -3,8 +3,8 @@ import numpy as np
 import pandas as pd
 import torch
 from sentence_transformers import SentenceTransformer
-from torch.nn.functional import cosine_similarity
 import numpy.typing as npt
+
 
 # device = "cuda:0" if torch.cuda.is_available() else "cpu"
 
@@ -20,8 +20,7 @@ class ObjectsTextSimilarity:
             self.model.encode(series.values, normalize_embeddings=True)
             for _, series in data.items()
         ]
-        # !!
-        self.data_embedding = torch.cat(vectors, dim=1)
+        self.data_embedding = np.hstack(vectors)
 
     def predict(
         self,
@@ -29,10 +28,9 @@ class ObjectsTextSimilarity:
         top_k: int = 10,
         filtr_ind: npt.NDArray[np.int64] | None = None,
     ) -> npt.NDArray[np.int64]:
-        query_vector = self.model.encode(query_object_lst, normalize_embeddings=True)
+        query_vector = np.hstack(self.model.encode(query_object_lst, normalize_embeddings=True))
 
-        # !!
-        similarities = cosine_similarity(query_vector.view(-1), self.data_embedding).cpu().numpy()
+        similarities = np.dot(self.data_embedding, query_vector)
 
         if filtr_ind is not None:
             similarities[filtr_ind] = -1.0
