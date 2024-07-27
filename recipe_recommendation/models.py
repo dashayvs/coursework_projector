@@ -159,7 +159,7 @@ class ObjectsSimilarityFiltered:
 
         # If there are not enough similar objects, return the available ones
         if len(filtered_indices) < top_k:
-            return np.argsort(similarities)[: -top_k - 1 : -1].astype(np.int64)
+            return np.argsort(similarities)[: -top_k - 1 : -1]
 
         # Compute matches for filtered indices
         matches = self.filter_data.iloc[filtered_indices].apply(self._filter, axis=1)
@@ -170,4 +170,4 @@ class ObjectsSimilarityFiltered:
 
         sorted_indices = filtered_indices[np.argsort(combined_scores)[::-1]]
 
-        return sorted_indices[:top_k]
+        return sorted_indices[:top_k].astype(np.int64)
