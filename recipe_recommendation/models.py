@@ -170,4 +170,4 @@ class ObjectsSimilarityFiltered:
 
         sorted_indices = filtered_indices[np.argsort(combined_scores)[::-1]]
 
-        return sorted_indices[:top_k].astype(np.int64)
+        return np.array(sorted_indices[:top_k].astype(np.int64))
