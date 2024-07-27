@@ -99,12 +99,10 @@ class ObjectsTextSimilarity:
 
     def fit(self, data: pd.DataFrame) -> None:
         self.data = data
-        self.name_text_features = self.data.columns
-        vectors: list[torch.Tensor] = [
-            self.model.encode(series.values, convert_to_tensor=True, device=device)
-            for _, series in data.items()
+        vectors: list[npt.NDArray[np.float32]] = [
+            self.model.encode(series.values) for _, series in data.items()
         ]
-        self.data_embedding = torch.cat(vectors, dim=1)
+        self.data_embedding = np.hstack(vectors)
 
     def predict(
         self,
@@ -112,9 +110,9 @@ class ObjectsTextSimilarity:
         top_k: int = 10,
         filtr_ind: npt.NDArray[np.int64] | None = None,
     ) -> npt.NDArray[np.int64]:
-        query_vector = self.model.encode(query_object_lst, convert_to_tensor=True, device=device)
+        query_vector = np.hstack(self.model.encode(query_object_lst))
 
-        similarities = cosine_similarity(query_vector.view(-1), self.data_embedding).cpu().numpy()
+        similarities = self.model.similarity(self.data_embedding, query_vector).view(-1).numpy()
 
         if filtr_ind is not None:
             similarities[filtr_ind] = -1.0
@@ -124,53 +122,52 @@ class ObjectsTextSimilarity:
         return top_k_indices
 
 
-# class ObjectsSimilarityFiltered:
-#     def __init__(self) -> None:
-#         self.model: SentenceTransformer = SentenceTransformer(
-#             "sentence-transformers/all-MiniLM-L6-v2"
-#         )
-#
-#     def fit(self, data: pd.DataFrame) -> None:
-#         self.data = data
-#         self.name_text_features = self.data.columns
-#         vectors: list[torch.Tensor] = [
-#             self.model.encode(series.values, convert_to_tensor=True, device=device)
-#             for _, series in data.items()
-#         ]
-#         self.data_embedding = torch.cat(vectors, dim=1)
-#
-#     def _filter(self, row: pd.Series) -> int:
-#         return sum(1 for col, value in zip(row.index, self.filter_features) if row[col] == value)
-#
-#     def predict(
-#         self, query_object_text: List[str], filter_features: List[int], top_k: int = 10
-#     ) -> ndarray[Any, dtype[signedinteger[Any] | int64]] | List[Any]:
-#         self.filter_features = filter_features
-#         vectors = self.model.encode(query_object_text, device=device)
-#         query_vector = vectors.view(-1)
-#         similarities = (
-#             torch.nn.functional.cosine_similarity(query_vector, self.data_embedding).cpu().numpy()
-#         )
-#
-#         similar_indices_len = len(np.where(similarities >= 0.8)[0])
-#         sorted_ind = np.argsort(similarities)[::-1]
-#
-#         if similar_indices_len < top_k + 1:
-#             return sorted_ind[1 : top_k + 1]
-#
-#         sorted_ind_filter = sorted_ind[1:similar_indices_len]
-#         res: List[Any] = []
-#         num_matches = len(filter_features)
-#         matches = self.filter_data.iloc[sorted_ind_filter].apply(self._filter, axis=1)
-#
-#         while len(res) != top_k and num_matches != -1:
-#             all_match_ind = list(matches.loc[matches == num_matches].index)
-#
-#             if top_k - len(res) < len(all_match_ind):
-#                 res.extend(all_match_ind[: (top_k - len(res))])
-#             else:
-#                 res.extend(all_match_ind)
-#
-#             num_matches -= 1
+class ObjectsSimilarityFiltered:
+    def __init__(self) -> None:
+        self.model = SentenceTransformer("sentence-transformers/all-MiniLM-L6-v2")
+        self.filter_data = pd.read_csv("D:\\recipe_recomendation\\data\\filter_data_recipes.csv")
 
-# return res
+    def fit(self, data: pd.DataFrame) -> None:
+        self.data = data
+        vectors: list[npt.NDArray[np.float32]] = [
+            self.model.encode(series.values) for _, series in data.items()
+        ]
+        self.data_embedding = np.hstack(vectors)
+
+    def _filter(self, row: pd.Series) -> int:
+        relevant_columns = row.index.intersection(self.filter_features.index)
+        return (row[relevant_columns] == self.filter_features).sum()
+
+    def predict(
+        self,
+        query_object_lst: List[str],
+        filter_features: pd.Series,
+        top_k: int = 10,
+        similarity_threshold: float = 0.8,
+        w1: float = 0.6,
+        w2: float = 0.4,
+    ) -> npt.NDArray[np.int64]:
+        self.filter_features = filter_features
+
+        query_vector = np.hstack(self.model.encode(query_object_lst))
+        similarities = self.model.similarity(self.data_embedding, query_vector).view(-1).numpy()
+
+        # Filter indices based on similarity threshold
+        filtered_indices = np.where(
+            (similarity_threshold <= similarities) & (similarities <= 0.98)
+        )[0]
+
+        # If there are not enough similar objects, return the available ones
+        if len(filtered_indices) < top_k:
+            return np.argsort(similarities)[: -top_k - 1 : -1]
+
+        # Compute matches for filtered indices
+        matches = self.filter_data.iloc[filtered_indices].apply(self._filter, axis=1)
+
+        combined_scores = w1 * similarities[filtered_indices] + w2 * (
+            matches / len(filter_features)
+        )
+
+        sorted_indices = filtered_indices[np.argsort(combined_scores)[::-1]]
+
+        return sorted_indices[:top_k]
