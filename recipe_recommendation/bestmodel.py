@@ -1,4 +1,6 @@
 # bestmodel.py
+from typing import cast
+
 import numpy as np
 import pandas as pd
 from sentence_transformers import SentenceTransformer
@@ -12,7 +14,8 @@ class ObjectsTextSimilarity:
     def fit(self, data: pd.DataFrame) -> None:
         self.data = data
         vectors: list[npt.NDArray[np.float32]] = [
-            self.model.encode(series.values) for _, series in data.items()
+            cast(npt.NDArray[np.float32], self.model.encode(series.values))
+            for _, series in data.items()
         ]
         self.data_embedding = np.hstack(vectors)
 

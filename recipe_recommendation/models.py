@@ -136,7 +136,7 @@ class ObjectsSimilarityFiltered:
 
     def _filter(self, row: pd.Series) -> int:
         relevant_columns = row.index.intersection(self.filter_features.index)
-        return (row[relevant_columns] == self.filter_features).sum()
+        return int((row[relevant_columns] == self.filter_features).sum())
 
     def predict(
         self,
@@ -159,7 +159,7 @@ class ObjectsSimilarityFiltered:
 
         # If there are not enough similar objects, return the available ones
         if len(filtered_indices) < top_k:
-            return np.argsort(similarities)[: -top_k - 1 : -1]
+            return np.argsort(similarities)[: -top_k - 1 : -1].astype(np.int64)
 
         # Compute matches for filtered indices
         matches = self.filter_data.iloc[filtered_indices].apply(self._filter, axis=1)
