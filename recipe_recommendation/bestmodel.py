@@ -28,6 +28,7 @@ class ObjectsTextSimilarity:
         query_vector = np.hstack(self.model.encode(query_object_lst))
 
         similarities = self.model.similarity(self.data_embedding, query_vector).view(-1).numpy()
+        similarities[similarities > 0.98] = -1.0
 
         if filtr_ind is not None:
             similarities[filtr_ind] = -1.0
