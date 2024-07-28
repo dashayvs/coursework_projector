@@ -20,6 +20,7 @@ device = "cuda:0" if torch.cuda.is_available() else "cpu"
 class WordsComparison:
     def __init__(self) -> None:
         self.lemmatizer: WordNetLemmatizer = WordNetLemmatizer()
+        nltk.download("stopwords")
         self.stop_words = set(stopwords.words("english"))
 
     def _get_unique_words(self, text: str) -> Set[str]:
@@ -32,19 +33,18 @@ class WordsComparison:
         return unique_words
 
     def _get_num_words(self, row: pd.Series) -> int:
-        num = 0
-        for i, elem in enumerate(row.values):
-            num += len(self.unique_query_object[i].intersection(elem))
-        return num
+        return sum(
+            len(self.unique_query_object[i].intersection(elem)) for i, elem in enumerate(row.values)
+        )
 
     def fit(self, text_data: pd.DataFrame) -> None:
-        self.unique_words_df = text_data.applymap(self._get_unique_words)
+        self.unique_words_df = text_data.map(self._get_unique_words)
 
-    def predict(self, query_object: List[str], top_k: int = 10) -> Any:
+    def predict(self, query_object: List[str], top_k: int = 10) -> npt.NDArray[np.int64]:
         self.unique_query_object = list(map(self._get_unique_words, query_object))
         num_match = self.unique_words_df.apply(self._get_num_words, axis=1)
-        top_5_max_values = num_match.nlargest(top_k + 1)
-        return top_5_max_values.index.tolist()[1:]
+        top_5_max_values = num_match.nlargest(top_k)
+        return np.array(top_5_max_values.index)
 
 
 class TfidfSimilarity:
@@ -113,7 +113,7 @@ class ObjectsTextSimilarity:
         query_vector = np.hstack(self.model.encode(query_object_lst))
 
         similarities = self.model.similarity(self.data_embedding, query_vector).view(-1).numpy()
-
+        similarities[similarities > 0.98] = -1.0
         if filtr_ind is not None:
             similarities[filtr_ind] = -1.0
 
