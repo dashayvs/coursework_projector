@@ -1,4 +1,4 @@
-from typing import List, Any, Set
+from typing import List, Set
 import numpy as np
 import pandas as pd
 import torch
@@ -6,7 +6,6 @@ import nltk
 from nltk import word_tokenize
 from nltk.stem import WordNetLemmatizer
 from nltk.corpus import stopwords
-from numpy import ndarray, dtype, signedinteger, int64
 from sklearn.metrics.pairwise import cosine_similarity
 from sentence_transformers import SentenceTransformer
 from sklearn.feature_extraction.text import TfidfVectorizer
@@ -48,22 +47,16 @@ class WordsComparison:
 
 
 class TfidfSimilarity:
-    def __init__(self, n_clusters: int = 10) -> None:
-        self.tfidf_vectorizer = TfidfVectorizer()
-        self.n_clusters: int = n_clusters
-
-    def fit(self, text_data: pd.DataFrame) -> None:
-        self.data = text_data.copy()
-        self.data["Combined_Text"] = text_data.apply(lambda row: ". ".join(row.values), axis=1)
+    def __init__(self) -> None:
         self.word_vectorizer = TfidfVectorizer(
             analyzer="word",
             ngram_range=(1, 2),
-            max_df=0.8,
             smooth_idf=True,
+            max_df=0.8,
             norm="l2",
             stop_words=list(stopwords.words("english")),
         )
-        word_matrix = self.word_vectorizer.fit_transform(self.data["Combined_Text"])
+
         self.char_vectorizer = TfidfVectorizer(
             analyzer="char",
             ngram_range=(2, 4),
@@ -73,23 +66,25 @@ class TfidfSimilarity:
             norm="l2",
             stop_words=list(stopwords.words("english")),
         )
-        char_matrix = self.char_vectorizer.fit_transform(self.data["Combined_Text"])
+
+    def fit(self, text_data: pd.DataFrame) -> None:
+        combined_text = text_data.agg(" ".join, axis=1).values.tolist()
+
+        word_matrix = self.word_vectorizer.fit_transform(combined_text)
+        char_matrix = self.char_vectorizer.fit_transform(combined_text)
+
         self.data_embedding = hstack((word_matrix, char_matrix))
 
-    def predict(
-        self, query_object: List[str], top_k: int = 10
-    ) -> ndarray[Any, dtype[signedinteger[Any] | int64]]:
-        comb_obj = [". ".join(query_object)]
-        query_vector = hstack(
-            (
-                self.word_vectorizer.transform(comb_obj),
-                self.char_vectorizer.transform(comb_obj),
-            )
-        )
+    def predict(self, query_object: List[str], top_k: int = 10) -> npt.NDArray[np.int64]:
+        combined_query_object = [". ".join(query_object)]
+
+        word_matrix = self.word_vectorizer.transform(combined_query_object)
+        char_matrix = self.char_vectorizer.transform(combined_query_object)
+
+        query_vector = hstack((word_matrix, char_matrix))
 
         similarities = cosine_similarity(query_vector, self.data_embedding)
-        top_k_indices = np.argsort(similarities[0])[::-1][1 : top_k + 1]
-
+        top_k_indices = np.argsort(similarities[0])[: -top_k + 1 : -1]
         return top_k_indices
 
 
