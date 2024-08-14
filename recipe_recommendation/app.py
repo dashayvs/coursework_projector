@@ -1,5 +1,5 @@
 from pathlib import Path
-from typing import Any, List
+from typing import Any
 
 import pandas as pd
 import streamlit as st
@@ -42,7 +42,7 @@ answ1 = st.radio("Select an option:", ["YES", "NO"], index=1)
 st.warning("Please note that too many restrictions can affect the quality of the search result")
 st.divider()
 
-param_list: List[List[Any]] = [[]] * 7
+param_list: list[list[Any]] = [[]] * 7
 
 if answ1 == "YES":
     param_list[0] = st.multiselect(

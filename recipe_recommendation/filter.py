@@ -1,6 +1,6 @@
 import os
 import sys
-from typing import Any, List
+from typing import Any
 
 import numpy as np
 import numpy.typing as npt
@@ -10,7 +10,7 @@ sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
 
 
 def filter_data(
-    param_list: List[Any],
+    param_list: list[Any],
     data_path: str = "D:\\recipe_recomendation\\data\\filter_data_recipes.csv",
 ) -> npt.NDArray[np.int64]:
     data = pd.read_csv(data_path)

@@ -1,7 +1,7 @@
 import re
 from datetime import datetime
 from itertools import combinations
-from typing import List, cast
+from typing import cast
 
 import inflect
 import pandas as pd
@@ -72,7 +72,7 @@ def clean_categories1(cat_str: str) -> str:
     return cat_str
 
 
-def generate_combinations(word1: str, word2: str, p: inflect.engine) -> List[str]:
+def generate_combinations(word1: str, word2: str, p: inflect.engine) -> list[str]:
     singular_word1 = singularize(word1)
     singular_word2 = singularize(word2)
     plural_word1 = p.plural(word1)
@@ -117,10 +117,10 @@ def clean_categories3(cat_str: str) -> str:
     try:
         lst = cat_str.split(", ")
         p = inflect.engine()
-        found_combinations: List[str] = []
+        found_combinations: list[str] = []
 
         for word1, word2 in combinations(lst, 2):
-            combinations_list: List[str] = generate_combinations(word1, word2, p)
+            combinations_list: list[str] = generate_combinations(word1, word2, p)
             found_combinations.extend(w for w in combinations_list if w in lst)
 
         lst = list(filter(lambda x: x not in found_combinations, lst))
@@ -182,7 +182,7 @@ def convert_time_to_minutes(time_str: str) -> int:
     return dt.hour * 60 + dt.minute
 
 
-def get_type_cooking_batch(dir_str_list: List[str]) -> List[str]:
+def get_type_cooking_batch(dir_str_list: list[str]) -> list[str]:
     batch_size = 32
     results = []
     for i in range(0, len(dir_str_list), batch_size):
@@ -192,7 +192,7 @@ def get_type_cooking_batch(dir_str_list: List[str]) -> List[str]:
     return results
 
 
-def get_ingr_cat(ingredients: str) -> List[str]:
+def get_ingr_cat(ingredients: str) -> list[str]:
     res_cat_ingr = list()
     ingr_lst = ingredients.split(",  ")
     result = CLASSIFIER(ingr_lst, INGREDIENTS)
@@ -202,7 +202,7 @@ def get_ingr_cat(ingredients: str) -> List[str]:
     return res_cat_ingr
 
 
-def fill_cat_ingr(row: pd.Series, result_ingr: List[list[str]]) -> pd.Series:
+def fill_cat_ingr(row: pd.Series, result_ingr: list[list[str]]) -> pd.Series:
     index = cast(int, row.name)
     for cat in result_ingr[index]:
         row[cat] = 1
