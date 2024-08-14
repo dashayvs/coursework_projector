@@ -5,7 +5,7 @@ from unittest.mock import patch
 import inflect
 
 # Assuming these functions are defined in recipe_recommendation.feature_eng_funcs
-from recipe_recommendation.feature_eng_funcs import (
+from recipe_recommendation.feature_eng import (
     clean_categories0,
     clean_categories1,
     singular_to_plural,
