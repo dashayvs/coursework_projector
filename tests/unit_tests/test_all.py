@@ -25,16 +25,16 @@ def test_clean_categories0():
         == "Dinner, Vegan, Vegetarian, Breakfast"
     )
     assert clean_categories0("Recipes, Soup Recipes, Vegan") == "Soup, Vegan"
-    assert (
-        clean_categories0("Lunch Recipes, Dinner Recipes, , Dessert")
-        == "Lunch, Dinner, Dessert"
-    )
+    assert clean_categories0("Lunch Recipes, Dinner Recipes, , Dessert") == "Lunch, Dinner, Dessert"
 
 
 def test_clean_categories1() -> None:
-    assert set(
-        clean_categories1("Dinner, Vegan, Dinner, Breakfast and Lunch").split(", ")
-    ) == {"Breakfast", "Dinner", "Lunch", "Vegan"}
+    assert set(clean_categories1("Dinner, Vegan, Dinner, Breakfast and Lunch").split(", ")) == {
+        "Breakfast",
+        "Dinner",
+        "Lunch",
+        "Vegan",
+    }
     assert set(clean_categories1("Soup, Vegan, Soup, Vegan").split(", ")) == {
         "Soup",
         "Vegan",
@@ -101,9 +101,7 @@ def test_convert_time_to_minutes() -> None:
 
 
 def test_fill_cat_ingr() -> None:
-    data = pd.DataFrame(
-        {"name": ["test1", "test2"], "tomato": [0, 0], "potato": [0, 0]}
-    )
+    data = pd.DataFrame({"name": ["test1", "test2"], "tomato": [0, 0], "potato": [0, 0]})
     result_ingr = [["tomato"], ["potato"]]
     data = data.apply(lambda row: fill_cat_ingr(row, result_ingr), axis=1)
     assert data.loc[0, "tomato"] == 1
