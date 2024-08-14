@@ -20,7 +20,10 @@ jobs:
         python-version: '3.11'
 
     - name: Install dependencies
-      run: pip install .[tests]
+      run: pip install -r requirements-test.txt
+
+    - name: Install package
+      run: pip install .[tests] --no-deps
 
     - name: Run ruff
       run: |
