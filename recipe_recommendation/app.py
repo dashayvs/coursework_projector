@@ -7,9 +7,14 @@ from recipe_recommendation.recipe_info import RecipeInfo
 from recipe_recommendation.models import ObjectsTextSimilarity
 
 ROOT_DIR = Path(__file__).parent.parent
-MODEL_PATH = ROOT_DIR / "model" / "ObjectsTextSimilarityModel1.npy"
 
+MODEL_PATH = ROOT_DIR / "model" / "ObjectsTextSimilarityModel1.npy"
+RECIPES_PATH = ROOT_DIR / "data" / "train_data_text_url.csv"
+
+# todo create streamlit const
 model = ObjectsTextSimilarity.load(MODEL_PATH)
+recipes = pd.read_csv(RECIPES_PATH)
+
 
 st.title("Search for similar recipes")
 st.divider()
@@ -158,9 +163,6 @@ if st.button("START SEARCH"):
         if ind_for_filter == 0:
             st.warning("You have set too many restrictions, search is not possible")
         else:
-            # todo create streamlit const
-            recipes = pd.read_csv("/data/train_data_text_url.csv")
-
             recipe_info = RecipeInfo(directions=recipe, ingredients=ingredients)
             top_ind = list(model.predict(recipe_info, number, ind_for_filter))
             rec_url = recipes.iloc[top_ind, :].loc[:, ["URL"]].values.flatten()
