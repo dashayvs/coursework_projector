@@ -7,6 +7,7 @@ import os
 
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
 from recipe_recommendation.filter import filter_data
+from recipe_recommendation.recipe_info import RecipeInfo
 
 
 with open("model\\ObjectsTextSimilarityModel1.pkl", "rb") as obj:
@@ -159,9 +160,11 @@ if st.button("START SEARCH"):
         if ind_for_filter == 0:
             st.warning("You have set too many restrictions, search is not possible")
         else:
-            recipes = pd.read_csv("D:\\recipe_recomendation\\data\\train_data_text_url.csv")
+            # todo create streamlit const
+            recipes = pd.read_csv("/data/train_data_text_url.csv")
 
-            top_ind = list(model.predict([recipe, ingredients], number, ind_for_filter))
+            recipe_info = RecipeInfo(directions=recipe, ingredients=ingredients)
+            top_ind = list(model.predict(recipe_info, number, ind_for_filter))
             rec_url = recipes.iloc[top_ind, :].loc[:, ["URL"]].values.flatten()
 
             st.text("Result: ")

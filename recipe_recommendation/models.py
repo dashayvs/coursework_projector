@@ -11,6 +11,7 @@ from sentence_transformers import SentenceTransformer
 from sklearn.feature_extraction.text import TfidfVectorizer
 from scipy.sparse import hstack
 import numpy.typing as npt
+from recipe_recommendation.recipe_info import RecipeInfo
 
 nltk.download("punkt")
 device = "cuda:0" if torch.cuda.is_available() else "cpu"
@@ -102,11 +103,13 @@ class ObjectsTextSimilarity:
 
     def predict(
         self,
-        query_object_lst: list[str],
+        query_object: RecipeInfo,
         top_k: int = 10,
         filtr_ind: npt.NDArray[np.int64] | None = None,
     ) -> npt.NDArray[np.int64]:
-        query_vector = np.hstack(self.model.encode(query_object_lst))
+        query_vector = np.hstack(
+            self.model.encode([query_object.directions, query_object.ingredients])
+        )
 
         [similarities] = self.model.similarity(query_vector, self.data_embedding).numpy()
         similarities[
