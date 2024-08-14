@@ -14,7 +14,6 @@ import numpy.typing as npt
 from recipe_recommendation.recipe_info import RecipeInfo
 from os import PathLike
 
-
 nltk.download("punkt")
 device = "cuda:0" if torch.cuda.is_available() else "cpu"
 
@@ -104,15 +103,12 @@ class ObjectsTextSimilarity:
         self.data_embedding = np.hstack(vectors)
 
     def predict(
-        self,
-        query_object: RecipeInfo,
-        top_k: int = 10,
-        filtr_ind: npt.NDArray[np.int64] = None,
+        self, query_object: RecipeInfo, filtr_ind: npt.NDArray[np.int64], top_k: int = 10
     ) -> npt.NDArray[np.int64]:
         query_vector = np.hstack(
             self.model.encode([query_object.directions, query_object.ingredients])
         )
-
+        # todo apply filter before doing similarity
         [similarities] = self.model.similarity(query_vector, self.data_embedding).numpy()
         similarities[
             similarities > self.duplicate_threshold

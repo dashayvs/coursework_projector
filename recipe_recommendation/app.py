@@ -163,7 +163,7 @@ if st.button("START SEARCH"):
             st.warning("You have set too many restrictions, search is not possible")
         else:
             recipe_info = RecipeInfo(directions=recipe, ingredients=ingredients)
-            top_ind = list(model.predict(recipe_info, number, ind_for_filter))
+            top_ind = list(model.predict(recipe_info, ind_for_filter, number))
             rec_url = recipes.iloc[top_ind, :].loc[:, ["URL"]].values.flatten()
 
             st.text("Result: ")
