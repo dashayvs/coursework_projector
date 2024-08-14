@@ -1,4 +1,4 @@
-from typing import List, Set, Self, AnyStr
+from typing import Self, AnyStr
 import numpy as np
 import pandas as pd
 import torch
@@ -24,7 +24,7 @@ class WordsComparison:
         nltk.download("stopwords")
         self.stop_words = set(stopwords.words("english"))
 
-    def _get_unique_words(self, text: str) -> Set[str]:
+    def _get_unique_words(self, text: str) -> set[str]:
         words = word_tokenize(text.lower())
         unique_words = {
             self.lemmatizer.lemmatize(word)
@@ -41,7 +41,7 @@ class WordsComparison:
     def fit(self, text_data: pd.DataFrame) -> None:
         self.unique_words_df = text_data.map(self._get_unique_words)
 
-    def predict(self, query_object: List[str], top_k: int = 10) -> npt.NDArray[np.int64]:
+    def predict(self, query_object: list[str], top_k: int = 10) -> npt.NDArray[np.int64]:
         self.unique_query_object = list(map(self._get_unique_words, query_object))
         num_match = self.unique_words_df.apply(self._get_num_words, axis=1)
         top_5_max_values = num_match.nlargest(top_k)
@@ -77,7 +77,7 @@ class TfidfSimilarity:
 
         self.data_embedding = hstack((word_matrix, char_matrix))
 
-    def predict(self, query_object: List[str], top_k: int = 10) -> npt.NDArray[np.int64]:
+    def predict(self, query_object: list[str], top_k: int = 10) -> npt.NDArray[np.int64]:
         combined_query_object = [". ".join(query_object)]
 
         word_matrix = self.word_vectorizer.transform(combined_query_object)
@@ -145,7 +145,7 @@ class ObjectsSimilarityFiltered:
 
     def predict(
         self,
-        query_object_lst: List[str],
+        query_object_lst: list[str],
         filter_features: pd.Series,
         top_k: int = 10,
         similarity_threshold: float = 0.8,
