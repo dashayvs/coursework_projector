@@ -1,12 +1,13 @@
-from datetime import datetime
-import inflect
-from typing import List, cast
-import pandas as pd
-from transformers import pipeline
-import torch
-from itertools import combinations
-from pattern.text.en import singularize
 import re
+from datetime import datetime
+from itertools import combinations
+from typing import List, cast
+
+import inflect
+import pandas as pd
+import torch
+from pattern.text.en import singularize
+from transformers import pipeline
 
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 CLASSIFIER = pipeline("zero-shot-classification", model="facebook/bart-large-mnli", device=device)

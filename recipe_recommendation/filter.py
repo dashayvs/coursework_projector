@@ -1,9 +1,10 @@
-from typing import List, Any
-import numpy.typing as npt
-import numpy as np
-import pandas as pd
-import sys
 import os
+import sys
+from typing import Any, List
+
+import numpy as np
+import numpy.typing as npt
+import pandas as pd
 
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
 

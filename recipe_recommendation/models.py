@@ -1,18 +1,20 @@
-from typing import Self, AnyStr
+from os import PathLike
+from typing import AnyStr, Self
+
+import nltk
 import numpy as np
+import numpy.typing as npt
 import pandas as pd
 import torch
-import nltk
 from nltk import word_tokenize
-from nltk.stem import WordNetLemmatizer
 from nltk.corpus import stopwords
-from sklearn.metrics.pairwise import cosine_similarity
+from nltk.stem import WordNetLemmatizer
+from scipy.sparse import hstack
 from sentence_transformers import SentenceTransformer
 from sklearn.feature_extraction.text import TfidfVectorizer
-from scipy.sparse import hstack
-import numpy.typing as npt
+from sklearn.metrics.pairwise import cosine_similarity
+
 from recipe_recommendation.recipe_info import RecipeInfo
-from os import PathLike
 
 nltk.download("punkt")
 device = "cuda:0" if torch.cuda.is_available() else "cpu"

@@ -1,19 +1,20 @@
+import pandas as pd
+from sklearn.preprocessing import LabelEncoder
+
 from recipe_recommendation.feature_eng import (
     clean_categories0,
     clean_categories1,
-    singular_to_plural,
     clean_categories3,
     clean_categories4,
-    get_meal,
-    get_course,
-    vegan_vegetarian,
     convert_time_to_minutes,
-    get_type_cooking_batch,
-    get_ingr_cat,
     fill_cat_ingr,
+    get_course,
+    get_ingr_cat,
+    get_meal,
+    get_type_cooking_batch,
+    singular_to_plural,
+    vegan_vegetarian,
 )
-from sklearn.preprocessing import LabelEncoder
-import pandas as pd
 
 data = pd.read_csv("../data_raw_recipes.csv")
 

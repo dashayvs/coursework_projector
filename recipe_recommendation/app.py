@@ -1,10 +1,12 @@
-from typing import List, Any
+from pathlib import Path
+from typing import Any, List
+
 import pandas as pd
 import streamlit as st
-from pathlib import Path
+
 from recipe_recommendation.filter import filter_data
-from recipe_recommendation.recipe_info import RecipeInfo
 from recipe_recommendation.models import ObjectsTextSimilarity
+from recipe_recommendation.recipe_info import RecipeInfo
 
 ROOT_DIR = Path(__file__).parent.parent
 
