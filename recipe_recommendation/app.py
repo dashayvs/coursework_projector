@@ -1,17 +1,15 @@
-import pickle
 from typing import List, Any
 import pandas as pd
 import streamlit as st
-import sys
-import os
-
-sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
+from pathlib import Path
 from recipe_recommendation.filter import filter_data
 from recipe_recommendation.recipe_info import RecipeInfo
+from recipe_recommendation.models import ObjectsTextSimilarity
 
+ROOT_DIR = Path(__file__).parent.parent
+MODEL_PATH = ROOT_DIR / "model" / "ObjectsTextSimilarityModel1.npy"
 
-with open("model\\ObjectsTextSimilarityModel1.pkl", "rb") as obj:
-    model = pickle.load(obj)
+model = ObjectsTextSimilarity.load(MODEL_PATH)
 
 st.title("Search for similar recipes")
 st.divider()

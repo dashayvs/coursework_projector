@@ -1,4 +1,4 @@
-from typing import List, Set
+from typing import List, Set, Self
 import numpy as np
 import pandas as pd
 import torch
@@ -12,6 +12,7 @@ from sklearn.feature_extraction.text import TfidfVectorizer
 from scipy.sparse import hstack
 import numpy.typing as npt
 from recipe_recommendation.recipe_info import RecipeInfo
+from os import PathLike
 
 nltk.download("punkt")
 device = "cuda:0" if torch.cuda.is_available() else "cpu"
@@ -121,6 +122,15 @@ class ObjectsTextSimilarity:
         top_k_indices = np.argsort(similarities)[: -top_k - 1 : -1]
 
         return top_k_indices
+
+    def save(self, path: str) -> None:
+        np.save(path, self.data_embedding)
+
+    @classmethod
+    def load(cls, path: PathLike) -> Self:
+        model = cls()
+        model.data_embedding = np.load(path)
+        return model
 
 
 class ObjectsSimilarityFiltered:
