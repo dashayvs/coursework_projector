@@ -1,21 +1,22 @@
 from typing import Any
-import pytest
-import pandas as pd
 from unittest.mock import patch
+
 import inflect
+import pandas as pd
+import pytest
 
 # Assuming these functions are defined in recipe_recommendation.feature_eng_funcs
 from recipe_recommendation.feature_eng import (
     clean_categories0,
     clean_categories1,
-    singular_to_plural,
-    generate_combinations,
     clean_categories3,
-    get_meal,
-    get_course,
-    vegan_vegetarian,
     convert_time_to_minutes,
     fill_cat_ingr,
+    generate_combinations,
+    get_course,
+    get_meal,
+    singular_to_plural,
+    vegan_vegetarian,
 )
 
 
@@ -61,7 +62,7 @@ def test_generate_combinations() -> None:
     assert "Dinners Recipes" in combinations_list
 
 
-@patch("recipe_recommendation.feature_eng_funcs.generate_combinations")
+@patch("recipe_recommendation.feature_eng.generate_combinations")
 def test_clean_categories3(mock_generate_combinations: Any) -> None:
     mock_generate_combinations.side_effect = lambda word1, word2, p: [
         f"{word1} {word2}",
