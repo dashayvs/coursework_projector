@@ -110,14 +110,10 @@ class ObjectsTextSimilarity:
         )
         # todo apply filter before doing similarity
         [similarities] = self.model.similarity(query_vector, self.data_embedding).numpy()
-        similarities[
-            similarities > self.duplicate_threshold
-        ] = -1.0  # delete recipe which is equal to query_object
-
+        # delete recipe which is equal to query_object
+        similarities[similarities > self.duplicate_threshold] = -1.0
         similarities[filtr_ind] = -1.0
-
         top_k_indices = np.argsort(similarities)[: -top_k - 1 : -1]
-
         return top_k_indices
 
     def save(self, path: str) -> None:
