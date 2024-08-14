@@ -8,9 +8,8 @@ import os
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
 from recipe_recommendation.filter import filter_data
 
-# from recipe_recommendation.bestmodel import ObjectsTextSimilarity
 
-with open("D:\\recipe_recomendation\\model\\ObjectsTextSimilarityModel.pkl", "rb") as obj:
+with open("model\\ObjectsTextSimilarityModel1.pkl", "rb") as obj:
     model = pickle.load(obj)
 
 st.title("Search for similar recipes")
