@@ -90,13 +90,13 @@ class TfidfSimilarity:
         return top_k_indices
 
 
+# todo unit tests
 class ObjectsTextSimilarity:
     def __init__(self) -> None:
         self.model = SentenceTransformer("sentence-transformers/all-MiniLM-L6-v2")
         self.duplicate_threshold = 0.98
 
     def fit(self, data: pd.DataFrame) -> None:
-        self.data = data
         vectors: list[npt.NDArray[np.float32]] = [
             self.model.encode(series.values) for _, series in data.items()
         ]
@@ -129,6 +129,7 @@ class ObjectsTextSimilarity:
 class ObjectsSimilarityFiltered:
     def __init__(self) -> None:
         self.model = SentenceTransformer("sentence-transformers/all-MiniLM-L6-v2")
+        # todo change path
         self.filter_data = pd.read_csv("data\\filter_data_recipes.csv")
         self.duplicate_threshold = 0.98
 
