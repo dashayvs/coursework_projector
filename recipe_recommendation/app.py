@@ -15,7 +15,6 @@ RECIPES_PATH = ROOT_DIR / "data" / "train_data_text_url.csv"
 model = ObjectsTextSimilarity.load(MODEL_PATH)
 recipes = pd.read_csv(RECIPES_PATH)
 
-
 st.title("Search for similar recipes")
 st.divider()
 
@@ -146,7 +145,7 @@ if answ1 == "YES":
 
 st.header("Searching", divider="rainbow")
 
-number: int | float = st.number_input(
+number: int = st.number_input(
     "Enter the number of recipes", min_value=1, max_value=50, step=1, value=5
 )
 
@@ -160,7 +159,7 @@ if st.button("START SEARCH"):
         st.warning("Please fill in the fields: Recipe and Ingredients list")
     else:
         ind_for_filter = filter_data(param_list)
-        if ind_for_filter == 0:
+        if recipes.shape[0] - len(ind_for_filter) < 100:
             st.warning("You have set too many restrictions, search is not possible")
         else:
             recipe_info = RecipeInfo(directions=recipe, ingredients=ingredients)

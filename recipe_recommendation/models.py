@@ -1,4 +1,4 @@
-from typing import List, Set, Self
+from typing import List, Set, Self, AnyStr
 import numpy as np
 import pandas as pd
 import torch
@@ -13,6 +13,7 @@ from scipy.sparse import hstack
 import numpy.typing as npt
 from recipe_recommendation.recipe_info import RecipeInfo
 from os import PathLike
+
 
 nltk.download("punkt")
 device = "cuda:0" if torch.cuda.is_available() else "cpu"
@@ -106,7 +107,7 @@ class ObjectsTextSimilarity:
         self,
         query_object: RecipeInfo,
         top_k: int = 10,
-        filtr_ind: npt.NDArray[np.int64] | None = None,
+        filtr_ind: npt.NDArray[np.int64] = None,
     ) -> npt.NDArray[np.int64]:
         query_vector = np.hstack(
             self.model.encode([query_object.directions, query_object.ingredients])
@@ -116,8 +117,8 @@ class ObjectsTextSimilarity:
         similarities[
             similarities > self.duplicate_threshold
         ] = -1.0  # delete recipe which is equal to query_object
-        if filtr_ind is not None:
-            similarities[filtr_ind] = -1.0
+
+        similarities[filtr_ind] = -1.0
 
         top_k_indices = np.argsort(similarities)[: -top_k - 1 : -1]
 
@@ -127,7 +128,7 @@ class ObjectsTextSimilarity:
         np.save(path, self.data_embedding)
 
     @classmethod
-    def load(cls, path: PathLike) -> Self:
+    def load(cls, path: PathLike[AnyStr]) -> Self:
         model = cls()
         model.data_embedding = np.load(path)
         return model
