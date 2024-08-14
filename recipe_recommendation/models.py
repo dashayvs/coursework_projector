@@ -91,6 +91,7 @@ class TfidfSimilarity:
 class ObjectsTextSimilarity:
     def __init__(self) -> None:
         self.model = SentenceTransformer("sentence-transformers/all-MiniLM-L6-v2")
+        self.duplicate_threshold = 0.98
 
     def fit(self, data: pd.DataFrame) -> None:
         self.data = data
@@ -107,8 +108,10 @@ class ObjectsTextSimilarity:
     ) -> npt.NDArray[np.int64]:
         query_vector = np.hstack(self.model.encode(query_object_lst))
 
-        similarities = self.model.similarity(self.data_embedding, query_vector).view(-1).numpy()
-        similarities[similarities > 0.98] = -1.0
+        [similarities] = self.model.similarity(query_vector, self.data_embedding).numpy()
+        similarities[
+            similarities > self.duplicate_threshold
+        ] = -1.0  # delete recipe which is equal to query_object
         if filtr_ind is not None:
             similarities[filtr_ind] = -1.0
 
@@ -120,7 +123,8 @@ class ObjectsTextSimilarity:
 class ObjectsSimilarityFiltered:
     def __init__(self) -> None:
         self.model = SentenceTransformer("sentence-transformers/all-MiniLM-L6-v2")
-        self.filter_data = pd.read_csv("D:\\recipe_recomendation\\data\\filter_data_recipes.csv")
+        self.filter_data = pd.read_csv("data\\filter_data_recipes.csv")
+        self.duplicate_threshold = 0.98
 
     def fit(self, data: pd.DataFrame) -> None:
         self.data = data
@@ -129,9 +133,8 @@ class ObjectsSimilarityFiltered:
         ]
         self.data_embedding = np.hstack(vectors)
 
-    def _filter(self, row: pd.Series) -> int:
-        relevant_columns = row.index.intersection(self.filter_features.index)
-        return int((row[relevant_columns] == self.filter_features).sum())
+    def _filter(self, row: pd.Series, filter_features: pd.Series) -> int:
+        return int((row[filter_features.index] == filter_features).sum())
 
     def predict(
         self,
@@ -139,17 +142,16 @@ class ObjectsSimilarityFiltered:
         filter_features: pd.Series,
         top_k: int = 10,
         similarity_threshold: float = 0.8,
-        w1: float = 0.6,
-        w2: float = 0.4,
+        w: float = 0.6,
     ) -> npt.NDArray[np.int64]:
         self.filter_features = filter_features
 
         query_vector = np.hstack(self.model.encode(query_object_lst))
-        similarities = self.model.similarity(self.data_embedding, query_vector).view(-1).numpy()
+        [similarities] = self.model.similarity(query_vector, self.data_embedding).numpy()
 
         # Filter indices based on similarity threshold
         filtered_indices = np.where(
-            (similarity_threshold <= similarities) & (similarities <= 0.98)
+            (similarity_threshold <= similarities) & (similarities <= self.duplicate_threshold)
         )[0]
 
         # If there are not enough similar objects, return the available ones
@@ -157,12 +159,14 @@ class ObjectsSimilarityFiltered:
             return np.argsort(similarities)[: -top_k - 1 : -1]
 
         # Compute matches for filtered indices
-        matches = self.filter_data.iloc[filtered_indices].apply(self._filter, axis=1)
+        matches = self.filter_data.iloc[filtered_indices].apply(
+            self._filter, args=(filter_features,), axis=1
+        )
 
-        combined_scores = w1 * similarities[filtered_indices] + w2 * (
+        combined_scores = w * similarities[filtered_indices] + (1.0 - w) * (
             matches / len(filter_features)
         )
 
-        sorted_indices = filtered_indices[np.argsort(combined_scores)[::-1]]
+        sorted_indices = filtered_indices[np.argsort(combined_scores)[: -top_k - 1 : -1]]
 
         return np.array(sorted_indices[:top_k].astype(np.int64))
