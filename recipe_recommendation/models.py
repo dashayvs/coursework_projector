@@ -1,4 +1,5 @@
 from os import PathLike
+from pathlib import Path
 from typing import AnyStr, Self
 
 import nltk
@@ -131,9 +132,11 @@ class ObjectsTextSimilarity:
 class ObjectsSimilarityFiltered:
     def __init__(self) -> None:
         self.model = SentenceTransformer("sentence-transformers/all-MiniLM-L6-v2")
-        # todo change path
-        self.filter_data = pd.read_csv("data\\filter_data_recipes.csv")
         self.duplicate_threshold = 0.98
+        # todo change path
+        ROOT_DIR = Path(__file__).parent.parent
+        F_DATA_PATH = ROOT_DIR / "data" / "filter_data_recipes.csv"
+        self.filter_data = pd.read_csv(F_DATA_PATH)
 
     def fit(self, data: pd.DataFrame) -> None:
         self.data = data
