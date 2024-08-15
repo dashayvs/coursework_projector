@@ -96,7 +96,7 @@ mysqlclient==2.2.4
     # via pattern
 networkx==3.3
     # via torch
-nltk==3.8.2
+nltk==3.8.1
     # via pattern
 numpy==1.26.4
     # via
