@@ -5,6 +5,7 @@ import pandas as pd
 import streamlit as st
 
 from recipe_recommendation.filter import filter_data
+from recipe_recommendation.filter_info import FilterInfo
 from recipe_recommendation.models import ObjectsTextSimilarity
 from recipe_recommendation.recipe_info import RecipeInfo
 
@@ -42,10 +43,10 @@ answ1 = st.radio("Select an option:", ["YES", "NO"], index=1)
 st.warning("Please note that too many restrictions can affect the quality of the search result")
 st.divider()
 
-param_list: list[list[Any]] = [[]] * 7
+filter_info = FilterInfo
 
 if answ1 == "YES":
-    param_list[0] = st.multiselect(
+    filter_info.methods = st.multiselect(
         "What cooking methods would you like to see in similar recipes?",
         [
             "Any",
@@ -65,7 +66,7 @@ if answ1 == "YES":
     )
 
     st.divider()
-    param_list[1] = st.multiselect(
+    filter_info.ingr_exclude = st.multiselect(
         "Select the foods you want to exclude: " "(you can choose nothing)",
         [
             "Vegetables",
@@ -82,7 +83,7 @@ if answ1 == "YES":
     st.divider()
     answ2 = st.radio("Do you want to choose a calorie range?", ["YES", "NO"], index=1)
     if answ2 == "YES":
-        param_list[2] = st.slider(
+        filter_info.calories_range = st.slider(
             "Select a calorie range (per servings)",
             min_value=0,
             max_value=1000,
@@ -90,15 +91,15 @@ if answ1 == "YES":
         )
         st.write(
             "You selected calorie range between",
-            param_list[2][0],
+            filter_info.calories_range[0],
             "and",
-            param_list[2][1],
+            filter_info.calories_range[1],
         )
 
     st.divider()
     answ3 = st.radio("Do you want to choose a protein range?", ["YES", "NO"], index=1)
     if answ3 == "YES":
-        param_list[3] = st.slider(
+        filter_info.proteins_range = st.slider(
             "Select a protein range (per servings)",
             min_value=0,
             max_value=40,
@@ -106,32 +107,42 @@ if answ1 == "YES":
         )
         st.write(
             "You selected protein range between",
-            param_list[3][0],
+            filter_info.proteins_range[0],
             "and",
-            param_list[3][1],
+            filter_info.proteins_range[1],
         )
 
     st.divider()
     answ4 = st.radio("Do you want to choose a fat range?", ["YES", "NO"], index=1)
     if answ4 == "YES":
-        param_list[4] = st.slider(
+        filter_info.fats_range = st.slider(
             "Select a fat range (per servings)",
             min_value=0,
             max_value=50,
             value=(0, 50),
         )
-        st.write("You selected fat range between", param_list[4][0], "and", param_list[4][1])
+        st.write(
+            "You selected fat range between",
+            filter_info.fats_range[0],
+            "and",
+            filter_info.fats_range[1],
+        )
 
     st.divider()
     answ5 = st.radio("Do you want to choose a carbs range?", ["YES", "NO"], index=1)
     if answ5 == "YES":
-        param_list[5] = st.slider(
+        filter_info.carbs_range = st.slider(
             "Select a carbs range (per servings)",
             min_value=0,
             max_value=100,
             value=(0, 100),
         )
-        st.write("You selected fat range between", param_list[5][0], "and", param_list[5][1])
+        st.write(
+            "You selected carbs range between",
+            filter_info.carbs_range[0],
+            "and",
+            filter_info.carbs_range[1],
+        )
 
     st.divider()
 
@@ -141,7 +152,7 @@ if answ1 == "YES":
             st.number_input("Hours", step=1),
             st.number_input("Minutes", step=1),
         )
-        param_list[6] = [hours * 60 + mins]
+        filter_info.time = hours * 60 + mins
 
     st.divider()
 
@@ -160,7 +171,7 @@ if st.button("START SEARCH"):
     if not recipe or not ingredients:
         st.warning("Please fill in the fields: Recipe and Ingredients list")
     else:
-        ind_for_filter = filter_data(param_list)
+        ind_for_filter = filter_data(filter_info)
         if recipes.shape[0] - len(ind_for_filter) < 100:
             st.warning("You have set too many restrictions, search is not possible")
         else:
