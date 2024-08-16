@@ -43,7 +43,7 @@ answ1 = st.radio("Select an option:", ["YES", "NO"], index=1)
 st.warning("Please note that too many restrictions can affect the quality of the search result")
 st.divider()
 
-filter_info = FilterInfo
+filter_info = FilterInfo()
 
 if answ1 == "YES":
     filter_info.methods = st.multiselect(

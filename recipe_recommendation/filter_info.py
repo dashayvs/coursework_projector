@@ -3,10 +3,10 @@ from dataclasses import dataclass
 
 @dataclass
 class FilterInfo:
-    methods: list[str]
-    ingr_exclude: list[str]
-    calories_range: list[int]
-    proteins_range: list[int]
-    fats_range: list[int]
-    carbs_range: list[int]
-    time: int
+    methods: list[str] | None = None
+    ingr_exclude: list[str] | None = None
+    calories_range: list[int] | None = None
+    proteins_range: list[int] | None = None
+    fats_range: list[int] | None = None
+    carbs_range: list[int] | None = None
+    time: int | None = None
