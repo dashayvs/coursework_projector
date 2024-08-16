@@ -123,7 +123,7 @@ class ObjectsTextSimilarity:
         np.save(path, self.data_embedding)
 
     @classmethod
-    def load(cls, path: PathLike[AnyStr]) -> Self:
+    def load(cls, path: PathLike[str]) -> Self:
         model = cls()
         model.data_embedding = np.load(path)
         return model

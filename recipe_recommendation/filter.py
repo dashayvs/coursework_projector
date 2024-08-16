@@ -14,7 +14,7 @@ F_DATA_PATH = ROOT_DIR / "data" / "filter_data_recipes.csv"
 
 def filter_data(
     filter_info: FilterInfo,
-    data_path: PathLike[AnyStr] = F_DATA_PATH,
+    data_path: PathLike[str] = F_DATA_PATH,
 ) -> npt.NDArray[np.int64]:
     data = pd.read_csv(data_path)
     new_data = data.copy()
