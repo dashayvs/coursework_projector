@@ -106,7 +106,10 @@ class ObjectsTextSimilarity:
         self.data_embedding = np.hstack(vectors)
 
     def predict(
-        self, query_object: RecipeInfo, filtr_ind: npt.NDArray[np.int64], top_k: int = 10
+        self,
+        query_object: RecipeInfo,
+        filtr_ind: npt.NDArray[np.int64] = np.array([], dtype=np.int64),
+        top_k: int = 10,
     ) -> npt.NDArray[np.int64]:
         query_vector = np.hstack(
             self.model.encode([query_object.directions, query_object.ingredients])
@@ -132,7 +135,7 @@ class ObjectsTextSimilarity:
 class ObjectsSimilarityFiltered:
     def __init__(self) -> None:
         self.model = SentenceTransformer("sentence-transformers/all-MiniLM-L6-v2")
-        self.duplicate_threshold = 0.98
+        self.duplicate_threshold = 0.95
         # todo change path
         ROOT_DIR = Path(__file__).parent.parent
         F_DATA_PATH = ROOT_DIR / "data" / "filter_data_recipes.csv"

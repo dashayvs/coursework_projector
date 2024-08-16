@@ -1,6 +1,5 @@
 from os import PathLike
 from pathlib import Path
-from typing import AnyStr
 
 import numpy as np
 import numpy.typing as npt
@@ -19,7 +18,7 @@ def filter_data(
     data = pd.read_csv(data_path)
     new_data = data.copy()
 
-    if filter_info.methods is not None and "Any" not in filter_info.methods:
+    if filter_info.methods != [] and "Any" not in filter_info.methods:
         new_data = new_data[new_data["Cooking Methods"].isin(filter_info.methods)]
 
     new_data = new_data[
@@ -54,6 +53,6 @@ def filter_data(
         new_data = new_data.loc[new_data["time, mins"] <= filter_info.time]
 
     if new_data.shape[0] != data.shape[0]:
-        return np.array(set(range(data.shape[0])) - set(list(new_data.index)), dtype=np.int64)
+        return np.array(list(set(range(data.shape[0])) - set(new_data.index)), dtype=np.int64)
     else:
         return np.array([], dtype=np.int64)
