@@ -158,8 +158,8 @@ if answ1 == "YES":
 
 st.header("Searching", divider="rainbow")
 
-number: int = st.number_input(
-    "Enter the number of recipes", min_value=1, max_value=50, step=1, value=5
+number: int = int(
+    st.number_input("Enter the number of recipes", min_value=1, max_value=50, step=1, value=5)
 )
 
 st.markdown(
