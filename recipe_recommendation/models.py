@@ -134,7 +134,7 @@ class ObjectsTextSimilarity:
         if filtr_ind is None:
             filtr_ind = np.empty(0, dtype=np.int64)
         query_vector = np.hstack(
-            self.model.encode([query_object.directions, query_object.ingredients])
+            self.model.encode([query_object.directions, query_object.ingredients]),
         )
         # todo apply filter before doing similarity
         [similarities] = self.model.similarity(query_vector, self.data_embedding).numpy()
@@ -185,7 +185,7 @@ class ObjectsSimilarityFiltered:
 
         # Filter indices based on similarity threshold
         filtered_indices = np.where(
-            (similarity_threshold <= similarities) & (similarities <= self.duplicate_threshold)
+            (similarity_threshold <= similarities) & (similarities <= self.duplicate_threshold),
         )[0]
 
         # If there are not enough similar objects, return the available ones
@@ -194,7 +194,9 @@ class ObjectsSimilarityFiltered:
 
         # Compute matches for filtered indices
         matches = self.filter_data.iloc[filtered_indices].apply(
-            self._filter, args=(filter_features,), axis=1
+            self._filter,
+            args=(filter_features,),
+            axis=1,
         )
 
         combined_scores = w * similarities[filtered_indices] + (1.0 - w) * (

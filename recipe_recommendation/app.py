@@ -75,7 +75,7 @@ if answ1 == "YES":
 
     st.divider()
     filter_info.ingr_exclude = st.multiselect(
-        "Select the foods you want to exclude: " "(you can choose nothing)",
+        "Select the foods you want to exclude: (you can choose nothing)",
         [
             "Vegetables",
             "Fruits",
@@ -167,7 +167,7 @@ if answ1 == "YES":
 st.header("Searching", divider="rainbow")
 
 number: int = int(
-    st.number_input("Enter the number of recipes", min_value=1, max_value=50, step=1, value=5)
+    st.number_input("Enter the number of recipes", min_value=1, max_value=50, step=1, value=5),
 )
 
 st.markdown(

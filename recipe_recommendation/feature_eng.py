@@ -193,7 +193,7 @@ def get_type_cooking_batch(dir_str_list: list[str]) -> list[str]:
 
 
 def get_ingr_cat(ingredients: str) -> list[str]:
-    res_cat_ingr = list()
+    res_cat_ingr = []
     ingr_lst = ingredients.split(",  ")
     result = CLASSIFIER(ingr_lst, INGREDIENTS)
     for res in result:
