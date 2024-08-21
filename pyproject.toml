@@ -82,10 +82,20 @@ select = [
 #    "T20"      replace print with logger
     "Q",
     "RSE",
-    "RET"
+    "RET",
+    "SIM",
+    "TID",
+    "ARG",
+    "PTH",
+    "PD",
+    "PL",
+    "NPY",
+    "PERF",
+    "RUF"
 ]
 ignore = [
     "E501",
     "COM812",
-    "RET504"
+    "RET504",
+    "PLR0913"
 ]
