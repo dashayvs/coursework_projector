@@ -202,7 +202,7 @@ def get_ingr_cat(ingredients: str) -> list[str]:
     return res_cat_ingr
 
 
-def fill_cat_ingr(row: pd.Series[float], result_ingr: list[list[str]]) -> pd.Series:
+def fill_cat_ingr(row: pd.Series[float], result_ingr: list[list[str]]) -> pd.Series[float]:
     index = cast(int, row.name)
     for cat in result_ingr[index]:
         row[cat] = 1
