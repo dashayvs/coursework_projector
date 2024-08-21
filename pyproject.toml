@@ -63,7 +63,8 @@ convention = "google"
 select = [
     "I",          # isort
     "F",
-    "E"
+    "E",
+    "W"
 ]
 ignore = [
     "E501",
