@@ -6,7 +6,6 @@ import nltk
 import numpy as np
 import numpy.typing as npt
 import pandas as pd
-import torch
 from nltk import word_tokenize
 from nltk.corpus import stopwords
 from nltk.stem import WordNetLemmatizer
@@ -36,7 +35,7 @@ class WordsComparison:
         }
         return unique_words
 
-    def _get_num_words(self, row: pd.Series) -> int:
+    def _get_num_words(self, row: pd.Series[np.float32]) -> int:
         return sum(
             len(self.unique_query_object[i].intersection(elem)) for i, elem in enumerate(row.values)
         )
@@ -166,13 +165,15 @@ class ObjectsSimilarityFiltered:
         ]
         self.data_embedding = np.hstack(vectors)
 
-    def _filter(self, row: pd.Series, filter_features: pd.Series) -> int:
-        return int((row[filter_features.index] == filter_features).sum())
+    def _filter(
+        self, row: pd.Series[np.float32], filter_features: pd.Series[np.float32]
+    ) -> np.float32:
+        return (row[filter_features.index] == filter_features).sum()
 
     def predict(
         self,
         query_object_lst: list[str],
-        filter_features: pd.Series,
+        filter_features: pd.Series[np.float32],
         top_k: int = 10,
         similarity_threshold: float = 0.8,
         w: float = 0.6,
