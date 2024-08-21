@@ -35,7 +35,7 @@ class WordsComparison:
         }
         return unique_words
 
-    def _get_num_words(self, row: pd.Series[np.float32]) -> int:
+    def _get_num_words(self, row: pd.Series[float]) -> int:
         return sum(
             len(self.unique_query_object[i].intersection(elem)) for i, elem in enumerate(row.values)
         )
@@ -165,15 +165,13 @@ class ObjectsSimilarityFiltered:
         ]
         self.data_embedding = np.hstack(vectors)
 
-    def _filter(
-        self, row: pd.Series[np.float32], filter_features: pd.Series[np.float32]
-    ) -> np.float32:
+    def _filter(self, row: pd.Series[float], filter_features: pd.Series[float]) -> float:
         return (row[filter_features.index] == filter_features).sum()
 
     def predict(
         self,
         query_object_lst: list[str],
-        filter_features: pd.Series[np.float32],
+        filter_features: pd.Series[float],
         top_k: int = 10,
         similarity_threshold: float = 0.8,
         w: float = 0.6,
