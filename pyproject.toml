@@ -59,5 +59,6 @@ convention = "google"
 
 [tool.ruff.lint]
 select = [
-    "I"          # isort
+    "I",          # isort
+    "F"
 ]
