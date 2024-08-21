@@ -72,9 +72,20 @@ select = [
     "FBT",
     "B",
     "A",
-    "COM"
+    "COM",
+    "C4",
+    "T10",
+    "FA",
+    "ICN",
+    "INP",
+    "PIE",
+#    "T20"      replace print with logger
+    "Q",
+    "RSE",
+    "RET"
 ]
 ignore = [
     "E501",
-    "COM812"
+    "COM812",
+    "RET504"
 ]
