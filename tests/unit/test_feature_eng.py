@@ -1,3 +1,5 @@
+from __future__ import annotations
+
 from typing import Any
 from unittest.mock import patch
 
@@ -96,15 +98,15 @@ def test_vegan_vegetarian() -> None:
     assert vegan_vegetarian("Soup, Meat") == "None"
 
 
-def test_convert_time_to_minutes() -> None:
-    assert convert_time_to_minutes("1 hr 30 mins") == 90
-    assert convert_time_to_minutes("2 hrs 15 mins") == 135
+@pytest.mark.parametrize("time_str, expected_mins", [("1 hr 30 mins", 90), ("2 hrs 15 mins", 135)])
+def test_convert_time_to_minutes(time_str, expected_mins) -> None:
+    assert convert_time_to_minutes(time_str) == expected_mins
 
 
 def test_fill_cat_ingr() -> None:
     data = pd.DataFrame({"name": ["test1", "test2"], "tomato": [0, 0], "potato": [0, 0]})
     result_ingr = [["tomato"], ["potato"]]
-    data = data.apply(lambda row: fill_cat_ingr(row, result_ingr), axis=1)
+    data = data.apply(lambda row: fill_cat_ingr(row, result_ingr[row.name]), axis=1)
     assert data.loc[0, "tomato"] == 1
     assert data.loc[1, "potato"] == 1
 

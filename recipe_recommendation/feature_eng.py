@@ -1,7 +1,6 @@
 import re
 from datetime import datetime
 from itertools import combinations
-from typing import cast
 
 import inflect
 import pandas as pd
@@ -203,8 +202,6 @@ def get_ingr_cat(ingredients: str) -> list[str]:
     return res_cat_ingr
 
 
-def fill_cat_ingr(row: pd.Series[float], result_ingr: list[list[str]]) -> pd.Series[float]:
-    index = cast(int, row.name)
-    for cat in result_ingr[index]:
-        row[cat] = 1
+def fill_cat_ingr(row: "pd.Series[float]", result_ingr: list[str]) -> "pd.Series[float]":
+    row[result_ingr] = 1
     return row
