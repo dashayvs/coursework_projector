@@ -4,7 +4,6 @@ from pathlib import Path
 import pandas as pd
 import streamlit as st
 
-sys.path.append(str(Path(__file__).resolve().parent.parent))
 from recipe_recommendation.filter import filter_data
 from recipe_recommendation.filter_info import FilterInfo
 from recipe_recommendation.models import ObjectsTextSimilarity
