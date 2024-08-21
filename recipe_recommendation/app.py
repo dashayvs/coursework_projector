@@ -16,8 +16,17 @@ MODEL_PATH = ROOT_DIR / "model" / "ObjectsTextSimilarityModel.npy"
 RECIPES_PATH = ROOT_DIR / "data" / "train_data_text_url.csv"
 
 # todo create streamlit const
-model = ObjectsTextSimilarity.load(MODEL_PATH)
-recipes = pd.read_csv(RECIPES_PATH)
+if "model" not in st.session_state:
+    st.session_state.model = ObjectsTextSimilarity.load(MODEL_PATH)
+
+if "recipes" not in st.session_state:
+    st.session_state.recipes = pd.read_csv(RECIPES_PATH)
+
+model = st.session_state.model
+recipes = st.session_state.recipes
+
+# model = ObjectsTextSimilarity.load(MODEL_PATH)
+# recipes = pd.read_csv(RECIPES_PATH)
 
 st.title("Search for similar recipes")
 st.divider()
