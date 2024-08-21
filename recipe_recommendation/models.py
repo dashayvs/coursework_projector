@@ -18,6 +18,9 @@ from recipe_recommendation.recipe_info import RecipeInfo
 
 # nltk.download("punkt")
 # device = "cuda:0" if torch.cuda.is_available() else "cpu"
+# todo change path
+ROOT_DIR = Path(__file__).parent.parent
+F_DATA_PATH = ROOT_DIR / "data" / "filter_data_recipes.csv"
 
 
 class WordsComparison:
@@ -125,9 +128,11 @@ class ObjectsTextSimilarity:
     def predict(
         self,
         query_object: RecipeInfo,
-        filtr_ind: npt.NDArray[np.int64] = np.array([], dtype=np.int64),
+        filtr_ind: npt.NDArray[np.int64] | None = None,
         top_k: int = 10,
     ) -> npt.NDArray[np.int64]:
+        if filtr_ind is None:
+            filtr_ind = np.empty(0, dtype=np.int64)
         query_vector = np.hstack(
             self.model.encode([query_object.directions, query_object.ingredients])
         )
@@ -153,9 +158,6 @@ class ObjectsSimilarityFiltered:
     def __init__(self) -> None:
         self.model = SentenceTransformer("sentence-transformers/all-MiniLM-L6-v2")
         self.duplicate_threshold = 0.95
-        # todo change path
-        ROOT_DIR = Path(__file__).parent.parent
-        F_DATA_PATH = ROOT_DIR / "data" / "filter_data_recipes.csv"
         self.filter_data = pd.read_csv(F_DATA_PATH)
 
     def fit(self, data: pd.DataFrame) -> None:

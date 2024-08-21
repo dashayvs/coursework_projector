@@ -141,7 +141,7 @@ def clean_categories4(cat_str: str) -> str:
             continue
         match = re.search(pattern, word)
         if match:
-            parts = re.split(pattern, word, 1)
+            parts = re.split(pattern, word, maxsplit=1)
             cat_set.add(parts[0].strip())
             matched_word = match.group()
             if matched_word not in cat_set or p.plural(matched_word) not in cat_set:
