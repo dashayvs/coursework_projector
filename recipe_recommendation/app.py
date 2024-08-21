@@ -8,6 +8,7 @@ from recipe_recommendation.filter_info import FilterInfo
 from recipe_recommendation.models import ObjectsTextSimilarity
 from recipe_recommendation.recipe_info import RecipeInfo
 
+N_FILTERED_RECIPES_THRESHOLD = 100
 ROOT_DIR = Path(__file__).parent.parent
 
 MODEL_PATH = ROOT_DIR / "model" / "ObjectsTextSimilarityModel.npy"
@@ -180,7 +181,8 @@ if st.button("START SEARCH"):
         st.warning("Please fill in the fields: Recipe and Ingredients list")
     else:
         ind_for_filter = filter_data(filter_info)
-        if recipes.shape[0] - len(ind_for_filter) < 100:
+
+        if recipes.shape[0] - len(ind_for_filter) < N_FILTERED_RECIPES_THRESHOLD:
             st.warning("You have set too many restrictions, search is not possible")
         else:
             recipe_info = RecipeInfo(directions=recipe, ingredients=ingredients)

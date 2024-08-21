@@ -57,6 +57,8 @@ MEALS = ["Breakfast", "Snack", "Lunch", "Brunch", "Dinner", "Supper"]
 
 COURSES = ["Dessert", "Side Dish", "Salad", "Soup", "Main Dish", "Appetizer"]
 
+SCORE_INGR_CLASSIFIER_THRESHOLD = 0.6
+
 
 def clean_categories0(cat_str: str) -> str:
     lst = [el.strip() for el in cat_str.split(", ") if el.strip() != ""]
@@ -193,12 +195,11 @@ def get_type_cooking_batch(dir_str_list: list[str]) -> list[str]:
 
 
 def get_ingr_cat(ingredients: str) -> list[str]:
-    res_cat_ingr = []
     ingr_lst = ingredients.split(",  ")
     result = CLASSIFIER(ingr_lst, INGREDIENTS)
-    for res in result:
-        if res["scores"][0] > 0.6:
-            res_cat_ingr.append(res["labels"][0])
+    res_cat_ingr = [
+        res["labels"][0] for res in result if res["scores"][0] > SCORE_INGR_CLASSIFIER_THRESHOLD
+    ]
     return res_cat_ingr
 
 
