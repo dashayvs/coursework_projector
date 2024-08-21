@@ -50,6 +50,7 @@ module = [
   "pattern.text.en.*",
   "nltk.*",
   "streamlit.*",
+  "sentence_transformers.*",
 ]
 
 [tool.ruff]
