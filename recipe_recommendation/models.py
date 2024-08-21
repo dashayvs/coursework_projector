@@ -1,6 +1,6 @@
 from os import PathLike
 from pathlib import Path
-from typing import AnyStr, Self
+from typing import Self
 
 import nltk
 import numpy as np
@@ -17,8 +17,8 @@ from sklearn.metrics.pairwise import cosine_similarity
 
 from recipe_recommendation.recipe_info import RecipeInfo
 
-nltk.download("punkt")
-device = "cuda:0" if torch.cuda.is_available() else "cpu"
+# nltk.download("punkt")
+# device = "cuda:0" if torch.cuda.is_available() else "cpu"
 
 
 class WordsComparison:
