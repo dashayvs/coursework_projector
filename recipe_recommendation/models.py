@@ -50,6 +50,15 @@ class WordsComparison:
         top_5_max_values = num_match.nlargest(top_k)
         return np.array(top_5_max_values.index)
 
+    def save(self, path: str) -> None:
+        np.save(path, self.unique_words_df)
+
+    @classmethod
+    def load(cls, path: PathLike[str]) -> Self:
+        model = cls()
+        model.unique_words_df = np.load(path)
+        return model
+
 
 class TfidfSimilarity:
     def __init__(self) -> None:
@@ -91,6 +100,15 @@ class TfidfSimilarity:
         similarities = cosine_similarity(query_vector, self.data_embedding)
         top_k_indices = np.argsort(similarities[0])[: -top_k + 1 : -1]
         return top_k_indices
+
+    def save(self, path: str) -> None:
+        np.save(path, self.data_embedding)
+
+    @classmethod
+    def load(cls, path: PathLike[str]) -> Self:
+        model = cls()
+        model.data_embedding = np.load(path)
+        return model
 
 
 # todo unit tests
@@ -185,3 +203,12 @@ class ObjectsSimilarityFiltered:
         sorted_indices = filtered_indices[np.argsort(combined_scores)[: -top_k - 1 : -1]]
 
         return np.array(sorted_indices[:top_k].astype(np.int64))
+
+    def save(self, path: str) -> None:
+        np.save(path, self.data_embedding)
+
+    @classmethod
+    def load(cls, path: PathLike[str]) -> Self:
+        model = cls()
+        model.data_embedding = np.load(path)
+        return model
