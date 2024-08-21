@@ -64,7 +64,8 @@ select = [
     "I",          # isort
     "F",
     "E",
-    "W"
+    "W",
+    "N"
 ]
 ignore = [
     "E501",
