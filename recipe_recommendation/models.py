@@ -84,7 +84,7 @@ class TfidfSimilarity:
         )
 
     def fit(self, text_data: pd.DataFrame) -> None:
-        combined_text = text_data.agg(" ".join, axis=1).values.tolist()
+        combined_text = text_data.agg(" ".join, axis=1).tolist()
 
         word_matrix = self.word_vectorizer.fit_transform(combined_text)
         char_matrix = self.char_vectorizer.fit_transform(combined_text)

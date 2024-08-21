@@ -185,7 +185,7 @@ if st.button("START SEARCH"):
         else:
             recipe_info = RecipeInfo(directions=recipe, ingredients=ingredients)
             top_ind = list(model.predict(recipe_info, ind_for_filter, number))
-            rec_url = recipes.iloc[top_ind, :].loc[:, ["URL"]].values.flatten()
+            rec_url = recipes.loc[top_ind, "URL"].to_numpy().flatten()
 
             st.text("Result: ")
             for i in range(int(number)):
