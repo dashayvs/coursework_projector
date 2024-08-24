@@ -1,6 +1,7 @@
+from abc import ABC, abstractmethod
 from os import PathLike
 from pathlib import Path
-from typing import Self
+from typing import Any, Self
 
 import nltk
 import numpy as np
@@ -18,12 +19,27 @@ from recipe_recommendation.recipe_info import RecipeInfo
 
 # nltk.download("punkt")
 # device = "cuda:0" if torch.cuda.is_available() else "cpu"
-# todo change path
+# todo create file with paths
 ROOT_DIR = Path(__file__).parent.parent
 F_DATA_PATH = ROOT_DIR / "data" / "filter_data_recipes.csv"
 
 
-class WordsComparison:
+class BaseModel(ABC):
+    @abstractmethod
+    def fit(self, data: pd.DataFrame) -> None: ...
+
+    @abstractmethod
+    def predict(self, query_object: RecipeInfo, **kwargs: Any) -> npt.NDArray[np.int64]: ...
+
+    @abstractmethod
+    def save(self, path: str) -> None: ...
+
+    @classmethod
+    @abstractmethod
+    def load(cls, path: PathLike[str]) -> Self: ...
+
+
+class WordsComparison(BaseModel):
     def __init__(self) -> None:
         self.lemmatizer: WordNetLemmatizer = WordNetLemmatizer()
         nltk.download("stopwords")
@@ -43,11 +59,14 @@ class WordsComparison:
             len(self.unique_query_object[i].intersection(elem)) for i, elem in enumerate(row.values)
         )
 
-    def fit(self, text_data: pd.DataFrame) -> None:
-        self.unique_words_df = text_data.map(self._get_unique_words)
+    def fit(self, data: pd.DataFrame) -> None:
+        self.unique_words_df = data.map(self._get_unique_words)
 
-    def predict(self, query_object: list[str], top_k: int = 10) -> npt.NDArray[np.int64]:
-        self.unique_query_object = list(map(self._get_unique_words, query_object))
+    def predict(
+        self, query_object: RecipeInfo, top_k: int = 10, **kwargs: Any
+    ) -> npt.NDArray[np.int64]:
+        query_object_lst = [query_object.directions, query_object.ingredients]
+        self.unique_query_object = list(map(self._get_unique_words, query_object_lst))
         num_match = self.unique_words_df.apply(self._get_num_words, axis=1)
         top_5_max_values = num_match.nlargest(top_k)
         return np.array(top_5_max_values.index)
@@ -62,7 +81,7 @@ class WordsComparison:
         return model
 
 
-class TfidfSimilarity:
+class TfidfSimilarity(BaseModel):
     def __init__(self) -> None:
         self.word_vectorizer = TfidfVectorizer(
             analyzer="word",
@@ -83,16 +102,18 @@ class TfidfSimilarity:
             stop_words=list(stopwords.words("english")),
         )
 
-    def fit(self, text_data: pd.DataFrame) -> None:
-        combined_text = text_data.agg(" ".join, axis=1).tolist()
+    def fit(self, data: pd.DataFrame) -> None:
+        combined_text = data.agg(" ".join, axis=1).tolist()
 
         word_matrix = self.word_vectorizer.fit_transform(combined_text)
         char_matrix = self.char_vectorizer.fit_transform(combined_text)
 
         self.data_embedding = hstack((word_matrix, char_matrix))
 
-    def predict(self, query_object: list[str], top_k: int = 10) -> npt.NDArray[np.int64]:
-        combined_query_object = [". ".join(query_object)]
+    def predict(
+        self, query_object: RecipeInfo, top_k: int = 10, **kwargs: Any
+    ) -> npt.NDArray[np.int64]:
+        combined_query_object = [". ".join([query_object.directions, query_object.ingredients])]
 
         word_matrix = self.word_vectorizer.transform(combined_query_object)
         char_matrix = self.char_vectorizer.transform(combined_query_object)
@@ -114,7 +135,7 @@ class TfidfSimilarity:
 
 
 # todo unit tests
-class ObjectsTextSimilarity:
+class ObjectsTextSimilarity(BaseModel):
     def __init__(self) -> None:
         self.model = SentenceTransformer("sentence-transformers/all-MiniLM-L6-v2")
         self.duplicate_threshold = 0.98
@@ -128,11 +149,12 @@ class ObjectsTextSimilarity:
     def predict(
         self,
         query_object: RecipeInfo,
-        filtr_ind: npt.NDArray[np.int64] | None = None,
+        filter_ind: npt.NDArray[np.int64] | None = None,
         top_k: int = 10,
+        **kwargs: Any,
     ) -> npt.NDArray[np.int64]:
-        if filtr_ind is None:
-            filtr_ind = np.empty(0, dtype=np.int64)
+        if filter_ind is None:
+            filter_ind = np.empty(0, dtype=np.int64)
         query_vector = np.hstack(
             self.model.encode([query_object.directions, query_object.ingredients]),
         )
@@ -140,7 +162,7 @@ class ObjectsTextSimilarity:
         [similarities] = self.model.similarity(query_vector, self.data_embedding).numpy()
         # delete recipe which is equal to query_object
         similarities[similarities > self.duplicate_threshold] = -1.0
-        similarities[filtr_ind] = -1.0
+        similarities[filter_ind] = -1.0
         top_k_indices = np.argsort(similarities)[: -top_k - 1 : -1]
         return top_k_indices
 
@@ -154,14 +176,13 @@ class ObjectsTextSimilarity:
         return model
 
 
-class ObjectsSimilarityFiltered:
+class ObjectsSimilarityFiltered(BaseModel):
     def __init__(self) -> None:
         self.model = SentenceTransformer("sentence-transformers/all-MiniLM-L6-v2")
         self.duplicate_threshold = 0.95
         self.filter_data = pd.read_csv(F_DATA_PATH)
 
     def fit(self, data: pd.DataFrame) -> None:
-        self.data = data
         vectors: list[npt.NDArray[np.float32]] = [
             self.model.encode(series.values) for _, series in data.items()
         ]
@@ -172,15 +193,20 @@ class ObjectsSimilarityFiltered:
 
     def predict(
         self,
-        query_object_lst: list[str],
-        filter_features: pd.Series[float],
+        query_object: RecipeInfo,
+        filter_features: pd.Series[float] | None = None,
         top_k: int = 10,
         similarity_threshold: float = 0.8,
         w: float = 0.6,
+        **kwargs: Any,
     ) -> npt.NDArray[np.int64]:
-        self.filter_features = filter_features
+        if filter_features is None:
+            raise ValueError("filter_features cannot be None")
 
-        query_vector = np.hstack(self.model.encode(query_object_lst))
+        query_vector = np.hstack(
+            self.model.encode([query_object.directions, query_object.ingredients]),
+        )
+
         [similarities] = self.model.similarity(query_vector, self.data_embedding).numpy()
 
         # Filter indices based on similarity threshold
