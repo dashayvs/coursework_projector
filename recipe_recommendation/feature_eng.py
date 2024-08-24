@@ -1,6 +1,7 @@
 import re
 from datetime import datetime
 from itertools import combinations
+from typing import Final
 
 import inflect
 import pandas as pd
@@ -8,10 +9,12 @@ import torch
 from pattern.text.en import singularize
 from transformers import pipeline
 
+# todo
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 CLASSIFIER = pipeline("zero-shot-classification", model="facebook/bart-large-mnli", device=device)
 
-COOK_METH = [
+# todo const
+COOKING_METH: Final[list[str]] = [
     "Baking",
     "Boiling",
     "Frying",
@@ -26,7 +29,7 @@ COOK_METH = [
     "Microwave",
 ]
 
-INGREDIENTS = [
+INGREDIENTS: Final[list[str]] = [
     "Vegetables",
     "Fruits",
     "Meat",
@@ -37,7 +40,7 @@ INGREDIENTS = [
     "Nuts",
 ]
 
-CATEGORIES = [
+CATEGORIES: Final[list[str]] = [
     "Main Dish",
     "Appetizer",
     "Salad",
@@ -52,11 +55,11 @@ CATEGORIES = [
     "Breakfast",
 ]
 
-MEALS = ["Breakfast", "Snack", "Lunch", "Brunch", "Dinner", "Supper"]
+MEALS: Final[list[str]] = ["Breakfast", "Snack", "Lunch", "Brunch", "Dinner", "Supper"]
 
-COURSES = ["Dessert", "Side Dish", "Salad", "Soup", "Main Dish", "Appetizer"]
+COURSES: Final[list[str]] = ["Dessert", "Side Dish", "Salad", "Soup", "Main Dish", "Appetizer"]
 
-SCORE_INGR_CLASSIFIER_THRESHOLD = 0.6
+SCORE_INGR_CLASSIFIER_THRESHOLD: Final[float] = 0.6
 
 
 def clean_categories0(cat_str: str) -> str:
@@ -188,7 +191,7 @@ def get_type_cooking_batch(dir_str_list: list[str]) -> list[str]:
     results = []
     for i in range(0, len(dir_str_list), batch_size):
         batch = dir_str_list[i : i + batch_size]
-        batch_results = CLASSIFIER(batch, COOK_METH)
+        batch_results = CLASSIFIER(batch, COOKING_METH)
         results.extend([res["labels"][0] for res in batch_results])
     return results
 

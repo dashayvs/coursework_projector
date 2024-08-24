@@ -1,4 +1,5 @@
 from pathlib import Path
+from typing import Final
 
 import pandas as pd
 import streamlit as st
@@ -8,7 +9,7 @@ from recipe_recommendation.filter_info import FilterInfo
 from recipe_recommendation.models import ObjectsTextSimilarity
 from recipe_recommendation.recipe_info import RecipeInfo
 
-N_FILTERED_RECIPES_THRESHOLD = 100
+N_FILTERED_RECIPES_THRESHOLD: Final[int] = 100
 ROOT_DIR = Path(__file__).parent.parent
 
 MODEL_PATH = ROOT_DIR / "model" / "ObjectsTextSimilarityModel.npy"
@@ -23,9 +24,6 @@ if "recipes" not in st.session_state:
 
 model = st.session_state.model
 recipes = st.session_state.recipes
-
-# model = ObjectsTextSimilarity.load(MODEL_PATH)
-# recipes = pd.read_csv(RECIPES_PATH)
 
 st.title("Search for similar recipes")
 st.divider()
