@@ -7,7 +7,6 @@ import inflect
 import pandas as pd
 import pytest
 
-# Assuming these functions are defined in recipe_recommendation.feature_eng_funcs
 from recipe_recommendation.feature_eng import (
     clean_categories0,
     clean_categories1,
@@ -22,38 +21,42 @@ from recipe_recommendation.feature_eng import (
 )
 
 
-def test_clean_categories0():
-    assert (
-        clean_categories0("Dinner Recipes, Vegan, Vegetarian Recipes, Breakfast")
-        == "Dinner, Vegan, Vegetarian, Breakfast"
-    )
-    assert clean_categories0("Recipes, Soup Recipes, Vegan") == "Soup, Vegan"
-    assert clean_categories0("Lunch Recipes, Dinner Recipes, , Dessert") == "Lunch, Dinner, Dessert"
+# todo parametrize
+@pytest.mark.parametrize(
+    "raw_str, expected_categories",
+    [
+        (
+            "Dinner Recipes, Vegan, Vegetarian Recipes, Breakfast",
+            "Dinner, Vegan, Vegetarian, Breakfast",
+        ),
+        ("Recipes, Soup Recipes, Vegan", "Soup, Vegan"),
+        ("Lunch Recipes, Dinner Recipes, , Dessert", "Lunch, Dinner, Dessert"),
+    ],
+)
+def test_clean_categories0(raw_str, expected_categories):
+    assert clean_categories0(raw_str) == expected_categories
 
 
-def test_clean_categories1() -> None:
-    assert set(clean_categories1("Dinner, Vegan, Dinner, Breakfast and Lunch").split(", ")) == {
-        "Breakfast",
-        "Dinner",
-        "Lunch",
-        "Vegan",
-    }
-    assert set(clean_categories1("Soup, Vegan, Soup, Vegan").split(", ")) == {
-        "Soup",
-        "Vegan",
-    }
+@pytest.mark.parametrize(
+    "raw_str, expected_categories",
+    [
+        ("Dinner, Vegan, Dinner, Breakfast and Lunch", {"Breakfast", "Dinner", "Lunch", "Vegan"}),
+        ("Soup, Vegan, Soup, Vegan", {"Soup", "Vegan"}),
+    ],
+)
+def test_clean_categories1(raw_str, expected_categories) -> None:
+    assert set(clean_categories1(raw_str).split(", ")) == expected_categories
 
 
-def test_singular_to_plural() -> None:
-    assert set(singular_to_plural("Dinner, Vegan, Breakfast Recipe").split(", ")) == {
-        "Dinner",
-        "Vegan",
-        "Breakfast Recipes",
-    }
-    assert set(singular_to_plural("Soup Recipe, Vegan").split(", ")) == {
-        "Soup Recipes",
-        "Vegan",
-    }
+@pytest.mark.parametrize(
+    "raw_str, expected_result",
+    [
+        ("Dinner, Vegan, Breakfast Recipe", {"Dinner", "Vegan", "Breakfast Recipes"}),
+        ("Soup Recipe, Vegan", {"Soup Recipes", "Vegan"}),
+    ],
+)
+def test_singular_to_plural(raw_str, expected_result) -> None:
+    assert set(singular_to_plural(raw_str).split(", ")) == expected_result
 
 
 def test_generate_combinations() -> None:
@@ -80,22 +83,36 @@ def test_clean_categories3(mock_generate_combinations: Any) -> None:
     }
 
 
-def test_get_meal() -> None:
-    assert get_meal("Dinner, Vegan") == "Dinner"
-    assert get_meal("Lunch, Vegan") == "Lunch"
-    assert get_meal("Soup, Vegan") == "None"
+@pytest.mark.parametrize(
+    "raw_str, expected_result",
+    [("Dinner, Vegan", "Dinner"), ("Lunch, Vegan", "Lunch"), ("Soup, Vegan", "None")],
+)
+def test_get_meal(raw_str, expected_result) -> None:
+    assert get_meal(raw_str) == expected_result
 
 
-def test_get_course() -> None:
-    assert get_course("Main Dish, Vegan, Breakfast") == "Main Dish"
-    assert get_course("Side Dish, Vegan") == "Side Dish"
-    assert get_course("Apple, Vegan") == "None"
+@pytest.mark.parametrize(
+    "raw_str, expected_result",
+    [
+        ("Main Dish, Vegan, Breakfast", "Main Dish"),
+        ("Side Dish, Vegan", "Side Dish"),
+        ("Apple, Vegan", "None"),
+    ],
+)
+def test_get_course(raw_str, expected_result) -> None:
+    assert get_course(raw_str) == expected_result
 
 
-def test_vegan_vegetarian() -> None:
-    assert vegan_vegetarian("Dinner, Vegan, Breakfast") == "Vegan"
-    assert vegan_vegetarian("Lunch, Vegetarian") == "Vegetarian"
-    assert vegan_vegetarian("Soup, Meat") == "None"
+@pytest.mark.parametrize(
+    "raw_str, expected_result",
+    [
+        ("Dinner, Vegan, Breakfast", "Vegan"),
+        ("Lunch, Vegetarian", "Vegetarian"),
+        ("Soup, Meat", "None"),
+    ],
+)
+def test_vegan_vegetarian(raw_str, expected_result) -> None:
+    assert vegan_vegetarian(raw_str) == expected_result
 
 
 @pytest.mark.parametrize("time_str, expected_mins", [("1 hr 30 mins", 90), ("2 hrs 15 mins", 135)])
