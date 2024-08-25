@@ -15,8 +15,9 @@ from recipe_recommendation.feature_eng import (
     singular_to_plural,
     vegan_vegetarian,
 )
+from recipe_recommendation.paths import RAW_RECIPES_PATH
 
-data = pd.read_csv("../data_raw_recipes.csv")
+data = pd.read_csv(RAW_RECIPES_PATH)
 
 data["Categories"] = (
     data["Categories"]

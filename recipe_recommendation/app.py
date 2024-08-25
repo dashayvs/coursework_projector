@@ -1,4 +1,3 @@
-from pathlib import Path
 from typing import Final
 
 import pandas as pd
@@ -7,15 +6,11 @@ import streamlit as st
 from recipe_recommendation.filter import filter_data
 from recipe_recommendation.filter_info import FilterInfo
 from recipe_recommendation.models import ObjectsTextSimilarity
+from recipe_recommendation.paths import MODEL_PATH, RECIPES_PATH
 from recipe_recommendation.recipe_info import RecipeInfo
 
 N_FILTERED_RECIPES_THRESHOLD: Final[int] = 100
-ROOT_DIR = Path(__file__).parent.parent
 
-MODEL_PATH = ROOT_DIR / "model" / "ObjectsTextSimilarityModel.npy"
-RECIPES_PATH = ROOT_DIR / "data" / "train_data_text_url.csv"
-
-# todo create streamlit const
 if "model" not in st.session_state:
     st.session_state.model = ObjectsTextSimilarity.load(MODEL_PATH)
 

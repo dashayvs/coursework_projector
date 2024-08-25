@@ -1,6 +1,5 @@
 from abc import ABC, abstractmethod
 from os import PathLike
-from pathlib import Path
 from typing import Any, Self
 
 import nltk
@@ -15,13 +14,10 @@ from sentence_transformers import SentenceTransformer
 from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.metrics.pairwise import cosine_similarity
 
+from recipe_recommendation.paths import F_DATA_PATH
 from recipe_recommendation.recipe_info import RecipeInfo
 
 # nltk.download("punkt")
-# device = "cuda:0" if torch.cuda.is_available() else "cpu"
-# todo create file with paths
-ROOT_DIR = Path(__file__).parent.parent
-F_DATA_PATH = ROOT_DIR / "data" / "filter_data_recipes.csv"
 
 
 class BaseModel(ABC):

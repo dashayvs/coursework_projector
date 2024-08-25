@@ -1,14 +1,11 @@
 from os import PathLike
-from pathlib import Path
 
 import numpy as np
 import numpy.typing as npt
 import pandas as pd
 
 from recipe_recommendation.filter_info import FilterInfo
-
-ROOT_DIR = Path(__file__).parent.parent
-F_DATA_PATH = ROOT_DIR / "data" / "filter_data_recipes.csv"
+from recipe_recommendation.paths import F_DATA_PATH
 
 
 def filter_data(
