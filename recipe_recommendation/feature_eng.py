@@ -6,7 +6,6 @@ from typing import Final
 import inflect
 import pandas as pd
 import torch
-from pattern.text.en import singularize
 from transformers import pipeline
 
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
@@ -135,11 +134,12 @@ def clean_categories3(cat_str: str) -> str:
 
 def clean_categories4(cat_str: str) -> str:
     pattern = r"\b(?:" + "|".join(map(re.escape, CATEGORIES)) + r")\b"
-    lst = cat_str.split(", ")
+    cat_str = " ".join(cat_str.split())
+    lst = cat_str.split(",")
     cat_set = set()
     p = inflect.engine()
     for word in lst:
-        if word in CATEGORIES or singularize(word) in CATEGORIES:
+        if word in CATEGORIES or p.singular_noun(word) in CATEGORIES:
             cat_set.add(word)
             continue
         match = re.search(pattern, word)
