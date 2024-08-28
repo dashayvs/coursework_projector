@@ -22,32 +22,27 @@ def filter_data(
         new_data[filter_info.ingr_exclude].apply(lambda row: all(val == 0 for val in row), axis=1)
     ]
 
-    if filter_info.calories_range != (0, 1000):
-        new_data = new_data.loc[
-            (new_data["Calories"] >= filter_info.calories_range[0])
-            & (new_data["Calories"] <= filter_info.calories_range[1])
-        ]
+    new_data = new_data.loc[
+        (new_data["Calories"] >= filter_info.calories_range[0])
+        & (new_data["Calories"] <= filter_info.calories_range[1])
+    ]
 
-    if filter_info.proteins_range != (0, 40):
-        new_data = new_data.loc[
-            (new_data["Protein"] >= filter_info.proteins_range[0])
-            & (new_data["Protein"] <= filter_info.proteins_range[1])
-        ]
+    new_data = new_data.loc[
+        (new_data["Protein"] >= filter_info.proteins_range[0])
+        & (new_data["Protein"] <= filter_info.proteins_range[1])
+    ]
 
-    if filter_info.fats_range != (0, 50):
-        new_data = new_data.loc[
-            (new_data["Fat"] >= filter_info.fats_range[0])
-            & (new_data["Fat"] <= filter_info.fats_range[1])
-        ]
+    new_data = new_data.loc[
+        (new_data["Fat"] >= filter_info.fats_range[0])
+        & (new_data["Fat"] <= filter_info.fats_range[1])
+    ]
 
-    if filter_info.carbs_range != (0, 100):
-        new_data = new_data.loc[
-            (new_data["Carbs"] >= filter_info.carbs_range[0])
-            & (new_data["Carbs"] <= filter_info.carbs_range[1])
-        ]
+    new_data = new_data.loc[
+        (new_data["Carbs"] >= filter_info.carbs_range[0])
+        & (new_data["Carbs"] <= filter_info.carbs_range[1])
+    ]
 
-    if filter_info.time != 0:
-        new_data = new_data.loc[new_data["time, mins"] <= filter_info.time]
+    new_data = new_data.loc[new_data["time, mins"] <= filter_info.time]
 
     if new_data.shape[0] != data.shape[0]:
         ind_for_filter = np.array(

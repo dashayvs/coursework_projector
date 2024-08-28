@@ -12,7 +12,7 @@ from transformers import pipeline
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 CLASSIFIER = pipeline("zero-shot-classification", model="facebook/bart-large-mnli", device=device)
 
-COOKING_METH: Final = [
+COOKING_METHODS: Final = [
     "Baking",
     "Boiling",
     "Frying",
@@ -176,7 +176,7 @@ def get_type_cooking_batch(dir_str_list: list[str]) -> list[str]:
     results = []
     for i in range(0, len(dir_str_list), batch_size):
         batch = dir_str_list[i : i + batch_size]
-        batch_results = CLASSIFIER(batch, COOKING_METH)
+        batch_results = CLASSIFIER(batch, COOKING_METHODS)
         results.extend([res["labels"][0] for res in batch_results])
     return results
 
