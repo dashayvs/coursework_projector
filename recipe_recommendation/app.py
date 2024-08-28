@@ -4,6 +4,7 @@ from typing import Final
 import pandas as pd
 import streamlit as st
 
+from recipe_recommendation.feature_eng import COOKING_METHODS, INGREDIENTS
 from recipe_recommendation.filter import filter_data
 from recipe_recommendation.filter_info import FilterInfo, Range
 from recipe_recommendation.models import ObjectsTextSimilarity
@@ -51,36 +52,14 @@ filter_info = FilterInfo()
 if answ1 == "YES":
     filter_info.methods = st.multiselect(
         "What cooking methods would you like to see in similar recipes?",
-        [
-            "Any",
-            "Baking",
-            "Freezing",
-            "Boiling",
-            "Raw Food",
-            "Smoking",
-            "Microwave",
-            "Frying",
-            "Stewing",
-            "Sous Vide",
-            "Grilling",
-            "Steaming",
-        ],
+        ["Any", *COOKING_METHODS],
         ["Any"],
     )
 
     st.divider()
     filter_info.ingr_exclude = st.multiselect(
         "Select the foods you want to exclude: (you can choose nothing)",
-        [
-            "Vegetables",
-            "Fruits",
-            "Meat",
-            "Seafood",
-            "Mushrooms",
-            "Dairy",
-            "Grains",
-            "Nuts",
-        ],
+        INGREDIENTS,
     )
 
     st.divider()
