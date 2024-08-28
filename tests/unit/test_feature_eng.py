@@ -8,16 +8,17 @@ import pandas as pd
 import pytest
 
 from recipe_recommendation.feature_eng import (
+    COURSES,
+    MEALS,
+    VEG_TYPES,
     clean_categories0,
     clean_categories1,
     clean_categories3,
     convert_time_to_minutes,
     fill_cat_ingr,
     generate_combinations,
-    get_course,
-    get_meal,
+    get_category,
     singular_to_plural,
-    vegan_vegetarian,
 )
 
 
@@ -84,35 +85,21 @@ def test_clean_categories3(mock_generate_combinations: Any) -> None:
 
 
 @pytest.mark.parametrize(
-    "raw_str, expected_result",
-    [("Dinner, Vegan", "Dinner"), ("Lunch, Vegan", "Lunch"), ("Soup, Vegan", "None")],
-)
-def test_get_meal(raw_str, expected_result) -> None:
-    assert get_meal(raw_str) == expected_result
-
-
-@pytest.mark.parametrize(
-    "raw_str, expected_result",
+    "raw_str, category, expected_result",
     [
-        ("Main Dish, Vegan, Breakfast", "Main Dish"),
-        ("Side Dish, Vegan", "Side Dish"),
-        ("Apple, Vegan", "None"),
+        ("Dinner, Vegan", MEALS, "Dinner"),
+        ("Lunch, Vegan", MEALS, "Lunch"),
+        ("Soup, Vegan", MEALS, "None"),
+        ("Main Dish, Vegan, Breakfast", COURSES, "Main Dish"),
+        ("Side Dish, Vegan", COURSES, "Side Dish"),
+        ("Apple, Vegan", COURSES, "None"),
+        ("Dinner, Vegan, Breakfast", VEG_TYPES, "Vegan"),
+        ("Lunch, Vegetarian", VEG_TYPES, "Vegetarian"),
+        ("Soup, Meat", VEG_TYPES, "None"),
     ],
 )
-def test_get_course(raw_str, expected_result) -> None:
-    assert get_course(raw_str) == expected_result
-
-
-@pytest.mark.parametrize(
-    "raw_str, expected_result",
-    [
-        ("Dinner, Vegan, Breakfast", "Vegan"),
-        ("Lunch, Vegetarian", "Vegetarian"),
-        ("Soup, Meat", "None"),
-    ],
-)
-def test_vegan_vegetarian(raw_str, expected_result) -> None:
-    assert vegan_vegetarian(raw_str) == expected_result
+def test_get_category(raw_str, category, expected_result) -> None:
+    assert get_category(raw_str, category) == expected_result
 
 
 @pytest.mark.parametrize("time_str, expected_mins", [("1 hr 30 mins", 90), ("2 hrs 15 mins", 135)])
