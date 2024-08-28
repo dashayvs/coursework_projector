@@ -9,12 +9,10 @@ import torch
 from pattern.text.en import singularize
 from transformers import pipeline
 
-# todo
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 CLASSIFIER = pipeline("zero-shot-classification", model="facebook/bart-large-mnli", device=device)
 
-# todo const
-COOKING_METH: Final[list[str]] = [
+COOKING_METH: Final = [
     "Baking",
     "Boiling",
     "Frying",
@@ -29,7 +27,7 @@ COOKING_METH: Final[list[str]] = [
     "Microwave",
 ]
 
-INGREDIENTS: Final[list[str]] = [
+INGREDIENTS: Final = [
     "Vegetables",
     "Fruits",
     "Meat",
@@ -40,7 +38,7 @@ INGREDIENTS: Final[list[str]] = [
     "Nuts",
 ]
 
-CATEGORIES: Final[list[str]] = [
+CATEGORIES: Final = [
     "Main Dish",
     "Appetizer",
     "Salad",
@@ -55,13 +53,13 @@ CATEGORIES: Final[list[str]] = [
     "Breakfast",
 ]
 
-MEALS: Final[list[str]] = ["Breakfast", "Snack", "Lunch", "Brunch", "Dinner", "Supper"]
+MEALS: Final = ["Breakfast", "Snack", "Lunch", "Brunch", "Dinner", "Supper"]
 
-COURSES: Final[list[str]] = ["Dessert", "Side Dish", "Salad", "Soup", "Main Dish", "Appetizer"]
+COURSES: Final = ["Dessert", "Side Dish", "Salad", "Soup", "Main Dish", "Appetizer"]
 
-VEG_TYPES: Final[list[str]] = ["Vegan", "Vegetarian"]
+VEG_TYPES: Final = ["Vegan", "Vegetarian"]
 
-SCORE_INGR_CLASSIFIER_THRESHOLD: Final[float] = 0.6
+SCORE_INGR_CLASSIFIER_THRESHOLD: Final = 0.6
 
 
 def clean_categories0(cat_str: str) -> str:
