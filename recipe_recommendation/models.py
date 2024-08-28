@@ -141,23 +141,20 @@ class ObjectsTextSimilarity(ModelTemplate):
     def predict(
         self,
         query_object: RecipeInfo,
-        filter_ind: npt.NDArray[np.int64] | None = None,
+        filter_ind: npt.NDArray[np.int64],
         top_k: int = 10,
     ) -> npt.NDArray[np.int64]:
-        if filter_ind is None:
-            filter_ind = np.arange(len(self.data_embedding))
         query_vector = np.hstack(
             self.model.encode([query_object.directions, query_object.ingredients]),
         )
-        # todo apply filter before doing similarity
         [similarities] = self.model.similarity(
             query_vector, self.data_embedding[filter_ind]
         ).numpy()
         # delete recipe which is equal to query_object
         similarities[similarities > self.duplicate_threshold] = -1.0
         top_k_indices = np.argsort(similarities)[: -top_k - 1 : -1]
-
-        return filter_ind[top_k_indices]
+        top_k_filter_ind: npt.NDArray[np.int64] = filter_ind[top_k_indices]
+        return top_k_filter_ind
 
     def save(self, path: PathLike[str]) -> None:
         np.save(path, self.data_embedding)
