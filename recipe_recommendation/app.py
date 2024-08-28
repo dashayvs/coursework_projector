@@ -184,7 +184,7 @@ if st.button("START SEARCH"):
     else:
         ind_for_filter = filter_data(filter_info)
 
-        if recipes.shape[0] - len(ind_for_filter) < N_FILTERED_RECIPES_THRESHOLD:
+        if len(ind_for_filter) < N_FILTERED_RECIPES_THRESHOLD:
             st.warning("You have set too many restrictions, search is not possible")
         else:
             recipe_info = RecipeInfo(directions=recipe, ingredients=ingredients)

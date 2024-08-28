@@ -44,11 +44,4 @@ def filter_data(
 
     new_data = new_data.loc[new_data["time, mins"] <= filter_info.time]
 
-    if new_data.shape[0] != data.shape[0]:
-        ind_for_filter = np.array(
-            list(set(range(data.shape[0])) - set(new_data.index)), dtype=np.int64
-        )
-    else:
-        ind_for_filter = np.array([], dtype=np.int64)
-
-    return ind_for_filter
+    return new_data.index.to_numpy()

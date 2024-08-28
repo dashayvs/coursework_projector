@@ -145,17 +145,19 @@ class ObjectsTextSimilarity(ModelTemplate):
         top_k: int = 10,
     ) -> npt.NDArray[np.int64]:
         if filter_ind is None:
-            filter_ind = np.empty(0, dtype=np.int64)
+            filter_ind = np.arange(len(self.data_embedding))
         query_vector = np.hstack(
             self.model.encode([query_object.directions, query_object.ingredients]),
         )
         # todo apply filter before doing similarity
-        [similarities] = self.model.similarity(query_vector, self.data_embedding).numpy()
+        [similarities] = self.model.similarity(
+            query_vector, self.data_embedding[filter_ind]
+        ).numpy()
         # delete recipe which is equal to query_object
         similarities[similarities > self.duplicate_threshold] = -1.0
-        similarities[filter_ind] = -1.0
         top_k_indices = np.argsort(similarities)[: -top_k - 1 : -1]
-        return top_k_indices
+
+        return filter_ind[top_k_indices]
 
     def save(self, path: PathLike[str]) -> None:
         np.save(path, self.data_embedding)
