@@ -77,8 +77,9 @@ def clean_categories1(cat_str: str) -> str:
 
 
 def generate_combinations(word1: str, word2: str, p: inflect.engine) -> list[str]:
-    singular_word1 = singularize(word1) or word1
-    singular_word2 = singularize(word2) or word2
+    singular_word1 = p.singular_noun(word1) or word1
+    singular_word2 = p.singular_noun(word2) or word2
+
     plural_word1 = p.plural(word1)
     plural_word2 = p.plural(word2)
 
@@ -115,18 +116,17 @@ def singular_to_plural(cat_str: str) -> str:
 
 
 def clean_categories3(cat_str: str) -> str:
-    lst = [cat.strip() for cat in cat_str.split(", ")]
+    # todo !! fix
+    cat_str = " ".join(cat_str.split())
+    lst = [cat.strip() for cat in cat_str.split(",")]
 
     p = inflect.engine()
     found_combinations = set()
 
     for word1, word2 in combinations(lst, 2):
-        try:
-            combinations_list = generate_combinations(word1, word2, p)
-            valid_combinations = [w for w in combinations_list if w in lst]
-            found_combinations.update(valid_combinations)
-        except IndexError:
-            continue
+        combinations_list = generate_combinations(word1, word2, p)
+        valid_combinations = [w for w in combinations_list if w in lst]
+        found_combinations.update(valid_combinations)
 
     filtered_list = [x for x in lst if x not in found_combinations]
 
