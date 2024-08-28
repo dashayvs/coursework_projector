@@ -68,7 +68,7 @@ select = [
     "N",
     "UP",
     "S",
-#    "BLE"
+    "BLE",
     "FBT",
     "B",
     "A",
@@ -78,7 +78,7 @@ select = [
     "FA",
     "ICN",
     "PIE",
-#    "T20"      replace print with logger
+    "T20",
     "Q",
     "RSE",
     "RET",
