@@ -23,23 +23,23 @@ def filter_data(
     ]
 
     new_data = new_data.loc[
-        (new_data["Calories"] >= filter_info.calories_range[0])
-        & (new_data["Calories"] <= filter_info.calories_range[1])
+        (new_data["Calories"] >= filter_info.calories_range.min)
+        & (new_data["Calories"] <= filter_info.calories_range.max)
     ]
 
     new_data = new_data.loc[
-        (new_data["Protein"] >= filter_info.proteins_range[0])
-        & (new_data["Protein"] <= filter_info.proteins_range[1])
+        (new_data["Protein"] >= filter_info.proteins_range.min)
+        & (new_data["Protein"] <= filter_info.proteins_range.max)
     ]
 
     new_data = new_data.loc[
-        (new_data["Fat"] >= filter_info.fats_range[0])
-        & (new_data["Fat"] <= filter_info.fats_range[1])
+        (new_data["Fat"] >= filter_info.fats_range.min)
+        & (new_data["Fat"] <= filter_info.fats_range.max)
     ]
 
     new_data = new_data.loc[
-        (new_data["Carbs"] >= filter_info.carbs_range[0])
-        & (new_data["Carbs"] <= filter_info.carbs_range[1])
+        (new_data["Carbs"] >= filter_info.carbs_range.min)
+        & (new_data["Carbs"] <= filter_info.carbs_range.max)
     ]
 
     new_data = new_data.loc[new_data["time, mins"] <= filter_info.time]

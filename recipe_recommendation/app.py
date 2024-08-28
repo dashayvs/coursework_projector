@@ -1,10 +1,11 @@
+from dataclasses import astuple
 from typing import Final
 
 import pandas as pd
 import streamlit as st
 
 from recipe_recommendation.filter import filter_data
-from recipe_recommendation.filter_info import FilterInfo
+from recipe_recommendation.filter_info import FilterInfo, Range
 from recipe_recommendation.models import ObjectsTextSimilarity
 from recipe_recommendation.paths import MODEL_PATH, RECIPES_PATH
 from recipe_recommendation.recipe_info import RecipeInfo
@@ -85,65 +86,73 @@ if answ1 == "YES":
     st.divider()
     answ2 = st.radio("Do you want to choose a calorie range?", ["YES", "NO"], index=1)
     if answ2 == "YES":
-        filter_info.calories_range = st.slider(
-            "Select a calorie range (per servings)",
-            min_value=0,
-            max_value=1000,
-            value=(0, 1000),
+        filter_info.calories_range = Range(
+            *st.slider(
+                "Select a calorie range (per servings)",
+                min_value=filter_info.CALORIES_LIMITS.min,
+                max_value=filter_info.CALORIES_LIMITS.max,
+                value=astuple(filter_info.calories_range),
+            )
         )
         st.write(
             "You selected calorie range between",
-            filter_info.calories_range[0],
+            filter_info.calories_range.min,
             "and",
-            filter_info.calories_range[1],
+            filter_info.calories_range.max,
         )
 
     st.divider()
     answ3 = st.radio("Do you want to choose a protein range?", ["YES", "NO"], index=1)
     if answ3 == "YES":
-        filter_info.proteins_range = st.slider(
-            "Select a protein range (per servings)",
-            min_value=0,
-            max_value=40,
-            value=(0, 40),
+        filter_info.proteins_range = Range(
+            *st.slider(
+                "Select a protein range (per servings)",
+                min_value=filter_info.PROTEINS_LIMITS.min,
+                max_value=filter_info.PROTEINS_LIMITS.max,
+                value=astuple(filter_info.proteins_range),
+            )
         )
         st.write(
             "You selected protein range between",
-            filter_info.proteins_range[0],
+            filter_info.proteins_range.min,
             "and",
-            filter_info.proteins_range[1],
+            filter_info.proteins_range.max,
         )
 
     st.divider()
     answ4 = st.radio("Do you want to choose a fat range?", ["YES", "NO"], index=1)
     if answ4 == "YES":
-        filter_info.fats_range = st.slider(
-            "Select a fat range (per servings)",
-            min_value=0,
-            max_value=50,
-            value=(0, 50),
+        filter_info.fats_range = Range(
+            *st.slider(
+                "Select a fat range (per servings)",
+                min_value=filter_info.FATS_LIMITS.min,
+                max_value=filter_info.FATS_LIMITS.max,
+                value=astuple(filter_info.fats_range),
+            )
         )
         st.write(
             "You selected fat range between",
-            filter_info.fats_range[0],
+            filter_info.fats_range.min,
             "and",
-            filter_info.fats_range[1],
+            filter_info.fats_range.max,
         )
 
     st.divider()
     answ5 = st.radio("Do you want to choose a carbs range?", ["YES", "NO"], index=1)
     if answ5 == "YES":
-        filter_info.carbs_range = st.slider(
-            "Select a carbs range (per servings)",
-            min_value=0,
-            max_value=100,
-            value=(0, 100),
+        filter_info.carbs_range = Range(
+            *st.slider(
+                "Select a carbs range (per servings)",
+                min_value=filter_info.CARBS_LIMITS.min,
+                max_value=filter_info.CARBS_LIMITS.max,
+                value=astuple(filter_info.carbs_range),
+            )
         )
         st.write(
             "You selected carbs range between",
-            filter_info.carbs_range[0],
+            filter_info.carbs_range.min,
             "and",
-            filter_info.carbs_range[1],
+            filter_info.carbs_range.max,
         )
 
     st.divider()
