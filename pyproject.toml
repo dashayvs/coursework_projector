@@ -22,7 +22,6 @@ dependencies = [
     "torch",
     "transformers",
     "inflect",
-    "pattern",
     "nltk"
 ]
 
@@ -48,7 +47,6 @@ module = [
   "sklearn.*",
   "inflect.*",
   "transformers.*",
-  "pattern.text.en.*",
   "nltk.*",
   "streamlit.*",
   "sentence_transformers.*",

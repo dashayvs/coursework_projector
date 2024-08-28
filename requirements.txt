@@ -4,24 +4,10 @@
 #
 #    pip-compile --output-file=requirements.txt pyproject.toml
 #
-autocommand==2.2.2
-    # via jaraco-text
-backports-csv==1.0.7
-    # via pattern
-beautifulsoup4==4.12.3
-    # via pattern
 certifi==2024.7.4
     # via requests
-cffi==1.17.0
-    # via cryptography
 charset-normalizer==3.3.2
-    # via
-    #   pdfminer-six
-    #   requests
-cheroot==10.0.1
-    # via cherrypy
-cherrypy==18.10.0
-    # via pattern
+    # via requests
 click==8.1.7
     # via nltk
 colorama==0.4.6
@@ -29,10 +15,6 @@ colorama==0.4.6
     #   click
     #   pytest
     #   tqdm
-cryptography==43.0.0
-    # via pdfminer-six
-feedparser==6.0.11
-    # via pattern
 filelock==3.15.4
     # via
     #   huggingface-hub
@@ -42,8 +24,6 @@ fsspec==2024.6.1
     # via
     #   huggingface-hub
     #   torch
-future==1.0.0
-    # via pattern
 huggingface-hub==0.24.5
     # via
     #   recipe_recommendation (pyproject.toml)
@@ -56,48 +36,25 @@ inflect==7.3.1
     # via recipe_recommendation (pyproject.toml)
 iniconfig==2.0.0
     # via pytest
-jaraco-collections==5.0.1
-    # via cherrypy
-jaraco-context==5.3.0
-    # via jaraco-text
-jaraco-functools==4.0.2
-    # via
-    #   cheroot
-    #   jaraco-text
-    #   tempora
-jaraco-text==4.0.0
-    # via jaraco-collections
 jinja2==3.1.4
     # via torch
 joblib==1.4.2
     # via
     #   nltk
     #   scikit-learn
-lxml==5.3.0
-    # via
-    #   pattern
-    #   python-docx
 markupsafe==2.1.5
     # via jinja2
 more-itertools==10.4.0
-    # via
-    #   cheroot
-    #   cherrypy
-    #   inflect
-    #   jaraco-functools
-    #   jaraco-text
+    # via inflect
 mpmath==1.3.0
     # via sympy
-mysqlclient==2.2.4
-    # via pattern
 networkx==3.3
     # via torch
 nltk==3.8.1
-    # via pattern
+    # via recipe_recommendation (pyproject.toml)
 numpy==1.26.4
     # via
     #   pandas
-    #   pattern
     #   recipe_recommendation (pyproject.toml)
     #   scikit-learn
     #   scipy
@@ -110,26 +67,14 @@ packaging==24.1
     #   transformers
 pandas==2.2.2
     # via recipe_recommendation (pyproject.toml)
-pattern==3.6.0
-    # via recipe_recommendation (pyproject.toml)
-pdfminer-six==20240706
-    # via pattern
 pillow==10.4.0
     # via sentence-transformers
 pluggy==1.5.0
     # via pytest
-portend==3.2.0
-    # via cherrypy
-pycparser==2.22
-    # via cffi
 pytest==8.3.2
     # via recipe_recommendation (pyproject.toml)
 python-dateutil==2.9.0.post0
-    # via
-    #   pandas
-    #   tempora
-python-docx==1.1.2
-    # via pattern
+    # via pandas
 pytz==2024.1
     # via pandas
 pyyaml==6.0.2
@@ -143,7 +88,6 @@ regex==2024.7.24
 requests==2.32.3
     # via
     #   huggingface-hub
-    #   pattern
     #   recipe_recommendation (pyproject.toml)
     #   transformers
 safetensors==0.4.4
@@ -154,24 +98,17 @@ scikit-learn==1.5.1
     #   sentence-transformers
 scipy==1.14.0
     # via
-    #   pattern
     #   recipe_recommendation (pyproject.toml)
     #   scikit-learn
     #   sentence-transformers
 sentence-transformers==3.0.0
     # via recipe_recommendation (pyproject.toml)
-sgmllib3k==1.0.0
-    # via feedparser
 six==1.16.0
     # via python-dateutil
-soupsieve==2.6
-    # via beautifulsoup4
 sympy==1.13.2
     # via
     #   recipe_recommendation (pyproject.toml)
     #   torch
-tempora==5.7.0
-    # via portend
 threadpoolctl==3.5.0
     # via scikit-learn
 tokenizers==0.19.1
@@ -195,15 +132,12 @@ typeguard==4.3.0
 typing-extensions==4.12.2
     # via
     #   huggingface-hub
-    #   python-docx
     #   torch
     #   typeguard
 tzdata==2024.1
     # via pandas
 urllib3==2.2.2
     # via requests
-zc-lockfile==3.0.post1
-    # via cherrypy
 
 # The following packages are considered to be unsafe in a requirements file:
 # setuptools
