@@ -25,7 +25,9 @@ class BaseModel(ABC):
     def fit(self, data: pd.DataFrame) -> None: ...
 
     @abstractmethod
-    def predict(self, query_object: RecipeInfo, **kwargs: Any) -> npt.NDArray[np.int64]: ...
+    def predict(
+        self, query_object: RecipeInfo, *args: Any, **kwargs: Any
+    ) -> npt.NDArray[np.int64]: ...
 
     @abstractmethod
     def save(self, path: str) -> None: ...
@@ -50,7 +52,7 @@ class WordsComparison(BaseModel):
         }
         return unique_words
 
-    def _get_num_words(self, row: pd.Series[float]) -> int:
+    def _get_num_words(self, row: "pd.Series[float]") -> int:
         return sum(
             len(self.unique_query_object[i].intersection(elem)) for i, elem in enumerate(row.values)
         )
@@ -58,9 +60,7 @@ class WordsComparison(BaseModel):
     def fit(self, data: pd.DataFrame) -> None:
         self.unique_words_df = data.map(self._get_unique_words)
 
-    def predict(
-        self, query_object: RecipeInfo, top_k: int = 10, **kwargs: Any
-    ) -> npt.NDArray[np.int64]:
+    def predict(self, query_object: RecipeInfo, top_k: int = 10) -> npt.NDArray[np.int64]:
         query_object_lst = [query_object.directions, query_object.ingredients]
         self.unique_query_object = list(map(self._get_unique_words, query_object_lst))
         num_match = self.unique_words_df.apply(self._get_num_words, axis=1)
@@ -106,9 +106,7 @@ class TfidfSimilarity(BaseModel):
 
         self.data_embedding = hstack((word_matrix, char_matrix))
 
-    def predict(
-        self, query_object: RecipeInfo, top_k: int = 10, **kwargs: Any
-    ) -> npt.NDArray[np.int64]:
+    def predict(self, query_object: RecipeInfo, top_k: int = 10) -> npt.NDArray[np.int64]:
         combined_query_object = [". ".join([query_object.directions, query_object.ingredients])]
 
         word_matrix = self.word_vectorizer.transform(combined_query_object)
@@ -147,7 +145,6 @@ class ObjectsTextSimilarity(BaseModel):
         query_object: RecipeInfo,
         filter_ind: npt.NDArray[np.int64] | None = None,
         top_k: int = 10,
-        **kwargs: Any,
     ) -> npt.NDArray[np.int64]:
         if filter_ind is None:
             filter_ind = np.empty(0, dtype=np.int64)
@@ -194,7 +191,6 @@ class ObjectsSimilarityFiltered(BaseModel):
         top_k: int = 10,
         similarity_threshold: float = 0.8,
         w: float = 0.6,
-        **kwargs: Any,
     ) -> npt.NDArray[np.int64]:
         if filter_features is None:
             raise ValueError("filter_features cannot be None")
