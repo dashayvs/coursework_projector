@@ -181,13 +181,13 @@ class ObjectsSimilarityFiltered(BaseModel):
         ]
         self.data_embedding = np.hstack(vectors)
 
-    def _filter(self, row: pd.Series[float], filter_features: pd.Series[float]) -> float:
+    def _filter(self, row: "pd.Series[float]", filter_features: "pd.Series[float]") -> float:
         return (row[filter_features.index] == filter_features).sum()
 
     def predict(
         self,
         query_object: RecipeInfo,
-        filter_features: pd.Series[float] | None = None,
+        filter_features: "pd.Series[float] | None" = None,
         top_k: int = 10,
         similarity_threshold: float = 0.8,
         w: float = 0.6,
