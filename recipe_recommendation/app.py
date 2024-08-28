@@ -7,13 +7,13 @@ import streamlit as st
 from recipe_recommendation.filter import filter_data
 from recipe_recommendation.filter_info import FilterInfo, Range
 from recipe_recommendation.models import ObjectsTextSimilarity
-from recipe_recommendation.paths import MODEL_PATH, RECIPES_PATH
+from recipe_recommendation.paths import BEST_MODEL_PATH, RECIPES_PATH
 from recipe_recommendation.recipe_info import RecipeInfo
 
 N_FILTERED_RECIPES_THRESHOLD: Final = 100
 
 if "model" not in st.session_state:
-    st.session_state.model = ObjectsTextSimilarity.load(MODEL_PATH)
+    st.session_state.model = ObjectsTextSimilarity.load(BEST_MODEL_PATH)
 
 if "recipes" not in st.session_state:
     st.session_state.recipes = pd.read_csv(RECIPES_PATH)

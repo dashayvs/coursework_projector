@@ -5,12 +5,12 @@ import numpy.typing as npt
 import pandas as pd
 
 from recipe_recommendation.filter_info import FilterInfo
-from recipe_recommendation.paths import F_DATA_PATH
+from recipe_recommendation.paths import FILTER_DATA_PATH
 
 
 def filter_data(
     filter_info: FilterInfo,
-    data_path: PathLike[str] = F_DATA_PATH,
+    data_path: PathLike[str] = FILTER_DATA_PATH,
 ) -> npt.NDArray[np.int64]:
     data = pd.read_csv(data_path)
     new_data = data.copy()

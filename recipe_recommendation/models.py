@@ -14,13 +14,11 @@ from sentence_transformers import SentenceTransformer
 from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.metrics.pairwise import cosine_similarity
 
-from recipe_recommendation.paths import F_DATA_PATH
+from recipe_recommendation.paths import FILTER_DATA_PATH
 from recipe_recommendation.recipe_info import RecipeInfo
 
-# nltk.download("punkt")
 
-
-class BaseModel(ABC):
+class ModelTemplate(ABC):
     @abstractmethod
     def fit(self, data: pd.DataFrame) -> None: ...
 
@@ -30,14 +28,14 @@ class BaseModel(ABC):
     ) -> npt.NDArray[np.int64]: ...
 
     @abstractmethod
-    def save(self, path: str) -> None: ...
+    def save(self, path: PathLike[str]) -> None: ...
 
     @classmethod
     @abstractmethod
     def load(cls, path: PathLike[str]) -> Self: ...
 
 
-class WordsComparison(BaseModel):
+class WordsComparison(ModelTemplate):
     def __init__(self) -> None:
         self.lemmatizer: WordNetLemmatizer = WordNetLemmatizer()
         nltk.download("stopwords")
@@ -67,7 +65,7 @@ class WordsComparison(BaseModel):
         top_5_max_values = num_match.nlargest(top_k)
         return np.array(top_5_max_values.index)
 
-    def save(self, path: str) -> None:
+    def save(self, path: PathLike[str]) -> None:
         np.save(path, self.unique_words_df)
 
     @classmethod
@@ -77,7 +75,7 @@ class WordsComparison(BaseModel):
         return model
 
 
-class TfidfSimilarity(BaseModel):
+class TfidfSimilarity(ModelTemplate):
     def __init__(self) -> None:
         self.word_vectorizer = TfidfVectorizer(
             analyzer="word",
@@ -118,7 +116,7 @@ class TfidfSimilarity(BaseModel):
         top_k_indices = np.argsort(similarities[0])[: -top_k + 1 : -1]
         return top_k_indices
 
-    def save(self, path: str) -> None:
+    def save(self, path: PathLike[str]) -> None:
         np.save(path, self.data_embedding)
 
     @classmethod
@@ -129,7 +127,7 @@ class TfidfSimilarity(BaseModel):
 
 
 # todo unit tests
-class ObjectsTextSimilarity(BaseModel):
+class ObjectsTextSimilarity(ModelTemplate):
     def __init__(self) -> None:
         self.model = SentenceTransformer("sentence-transformers/all-MiniLM-L6-v2")
         self.duplicate_threshold = 0.98
@@ -159,7 +157,7 @@ class ObjectsTextSimilarity(BaseModel):
         top_k_indices = np.argsort(similarities)[: -top_k - 1 : -1]
         return top_k_indices
 
-    def save(self, path: str) -> None:
+    def save(self, path: PathLike[str]) -> None:
         np.save(path, self.data_embedding)
 
     @classmethod
@@ -169,11 +167,11 @@ class ObjectsTextSimilarity(BaseModel):
         return model
 
 
-class ObjectsSimilarityFiltered(BaseModel):
+class ObjectsSimilarityFiltered(ModelTemplate):
     def __init__(self) -> None:
         self.model = SentenceTransformer("sentence-transformers/all-MiniLM-L6-v2")
         self.duplicate_threshold = 0.95
-        self.filter_data = pd.read_csv(F_DATA_PATH)
+        self.filter_data = pd.read_csv(FILTER_DATA_PATH)
 
     def fit(self, data: pd.DataFrame) -> None:
         vectors: list[npt.NDArray[np.float32]] = [
@@ -225,7 +223,7 @@ class ObjectsSimilarityFiltered(BaseModel):
 
         return np.array(sorted_indices[:top_k].astype(np.int64))
 
-    def save(self, path: str) -> None:
+    def save(self, path: PathLike[str]) -> None:
         np.save(path, self.data_embedding)
 
     @classmethod
