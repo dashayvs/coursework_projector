@@ -9,7 +9,7 @@ from recipe_recommendation.models import ObjectsTextSimilarity
 from recipe_recommendation.paths import MODEL_PATH, RECIPES_PATH
 from recipe_recommendation.recipe_info import RecipeInfo
 
-N_FILTERED_RECIPES_THRESHOLD: Final[int] = 100
+N_FILTERED_RECIPES_THRESHOLD: Final = 100
 
 if "model" not in st.session_state:
     st.session_state.model = ObjectsTextSimilarity.load(MODEL_PATH)
