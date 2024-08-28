@@ -22,7 +22,8 @@ dependencies = [
     "torch",
     "transformers",
     "inflect",
-    "pattern"
+    "pattern",
+    "nltk"
 ]
 
 [project.optional-dependencies]
