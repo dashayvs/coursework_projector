@@ -2,18 +2,19 @@ import pandas as pd
 from sklearn.preprocessing import LabelEncoder
 
 from recipe_recommendation.feature_eng import (
+    COURSES,
+    MEALS,
+    VEG_TYPES,
     clean_categories0,
     clean_categories1,
     clean_categories3,
     clean_categories4,
     convert_time_to_minutes,
     fill_cat_ingr,
-    get_course,
+    get_category,
     get_ingr_cat,
-    get_meal,
     get_type_cooking_batch,
     singular_to_plural,
-    vegan_vegetarian,
 )
 from recipe_recommendation.paths import RAW_RECIPES_PATH
 
@@ -32,10 +33,10 @@ train_data = pd.DataFrame()
 train_data[["Calories", "Fat", "Carbs", "Protein"]] = data.loc[
     :, ["Calories", "Fat", "Carbs", "Protein"]
 ]
-train_data["Meal"] = data["Categories"].apply(get_meal)
-train_data["Course"] = data["Categories"].apply(get_course)
+train_data["Meal"] = data["Categories"].apply(get_category, args=(MEALS,))
+train_data["Course"] = data["Categories"].apply(get_category, args=(COURSES,))
 train_data["Healthy"] = data["Categories"].str.contains("Healthy").astype(int)
-train_data["Special Nutrition"] = data["Categories"].apply(vegan_vegetarian)
+train_data["Special Nutrition"] = data["Categories"].apply(get_category, args=(VEG_TYPES,))
 train_data["time, mins"] = data["Total Time"].apply(convert_time_to_minutes)
 train_data[["Vegetables", "Fruits", "Meat", "Mushrooms", "Dairy", "Grains", "Nuts"]] = 0
 train_data["Cooking Methods"] = get_type_cooking_batch(data["Directions"].tolist())
