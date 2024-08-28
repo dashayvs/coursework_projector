@@ -59,6 +59,8 @@ MEALS: Final[list[str]] = ["Breakfast", "Snack", "Lunch", "Brunch", "Dinner", "S
 
 COURSES: Final[list[str]] = ["Dessert", "Side Dish", "Salad", "Soup", "Main Dish", "Appetizer"]
 
+VEG_TYPES: Final[list[str]] = ["Vegan", "Vegetarian"]
+
 SCORE_INGR_CLASSIFIER_THRESHOLD: Final[float] = 0.6
 
 
@@ -77,8 +79,8 @@ def clean_categories1(cat_str: str) -> str:
 
 
 def generate_combinations(word1: str, word2: str, p: inflect.engine) -> list[str]:
-    singular_word1 = singularize(word1)
-    singular_word2 = singularize(word2)
+    singular_word1 = singularize(word1) or word1
+    singular_word2 = singularize(word2) or word2
     plural_word1 = p.plural(word1)
     plural_word2 = p.plural(word2)
 
@@ -102,36 +104,35 @@ def generate_combinations(word1: str, word2: str, p: inflect.engine) -> list[str
 
 
 def singular_to_plural(cat_str: str) -> str:
-    try:
-        lst = cat_str.split(", ")
-        p = inflect.engine()
-        for i, el in enumerate(lst):
-            words = el.split(" ")
-            words[-1] = p.plural(words[-1])
-            if len(words) > 1:
-                lst[i] = " ".join(words)
-        cat_str = ", ".join(set(lst))
-    except Exception as e:
-        print(e)
-        print(cat_str)
+    lst = cat_str.split(", ")
+    p = inflect.engine()
+    for i, el in enumerate(lst):
+        words = el.split(" ")
+        words[-1] = p.plural(words[-1])
+        if len(words) > 1:
+            lst[i] = " ".join(words)
+    cat_str = ", ".join(set(lst))
+
     return cat_str
 
 
 def clean_categories3(cat_str: str) -> str:
-    try:
-        lst = cat_str.split(", ")
-        p = inflect.engine()
-        found_combinations: list[str] = []
+    lst = [cat.strip() for cat in cat_str.split(", ")]
 
-        for word1, word2 in combinations(lst, 2):
-            combinations_list: list[str] = generate_combinations(word1, word2, p)
-            found_combinations.extend(w for w in combinations_list if w in lst)
+    p = inflect.engine()
+    found_combinations = set()
 
-        lst = list(filter(lambda x: x not in found_combinations, lst))
-        return ", ".join(lst)
-    except Exception as e:
-        print(e)
-        return cat_str
+    for word1, word2 in combinations(lst, 2):
+        try:
+            combinations_list = generate_combinations(word1, word2, p)
+            valid_combinations = [w for w in combinations_list if w in lst]
+            found_combinations.update(valid_combinations)
+        except IndexError:
+            continue
+
+    filtered_list = [x for x in lst if x not in found_combinations]
+
+    return ", ".join(filtered_list)
 
 
 def clean_categories4(cat_str: str) -> str:
@@ -157,22 +158,8 @@ def clean_categories4(cat_str: str) -> str:
     return ", ".join(cat_set)
 
 
-def get_meal(cat_str: str) -> str:
-    for m in MEALS:
-        if m in cat_str:
-            return m
-    return "None"
-
-
-def get_course(cat_str: str) -> str:
-    for m in COURSES:
-        if m in cat_str:
-            return m
-    return "None"
-
-
-def vegan_vegetarian(cat_str: str) -> str:
-    for m in ["Vegan", "Vegetarian"]:
+def get_category(cat_str: str, cat_name: list[str]) -> str:
+    for m in cat_name:
         if m in cat_str:
             return m
     return "None"
