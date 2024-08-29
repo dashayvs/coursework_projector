@@ -4,12 +4,11 @@ from typing import Final
 import pandas as pd
 import streamlit as st
 
+from recipe_recommendation.dataclasses import FilterInfo, Range, RecipeInfo
 from recipe_recommendation.feature_eng import COOKING_METHODS, INGREDIENTS
 from recipe_recommendation.filter import filter_data
-from recipe_recommendation.filter_info import FilterInfo, Range
 from recipe_recommendation.models import ObjectsTextSimilarity
 from recipe_recommendation.paths import BEST_MODEL_PATH, RECIPES_PATH
-from recipe_recommendation.recipe_info import RecipeInfo
 
 N_FILTERED_RECIPES_THRESHOLD: Final = 100
 

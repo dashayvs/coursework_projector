@@ -23,3 +23,9 @@ class FilterInfo:
     fats_range: Range = Range(0, 50)  # noqa: RUF009
     carbs_range: Range = Range(0, 100)  # noqa: RUF009
     time: float = 0
+
+
+@dataclass
+class RecipeInfo:
+    directions: str
+    ingredients: str

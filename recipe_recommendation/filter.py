@@ -4,7 +4,7 @@ import numpy as np
 import numpy.typing as npt
 import pandas as pd
 
-from recipe_recommendation.filter_info import FilterInfo
+from recipe_recommendation.dataclasses import FilterInfo
 from recipe_recommendation.paths import FILTER_DATA_PATH
 
 
