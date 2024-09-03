@@ -14,8 +14,8 @@ from sentence_transformers import SentenceTransformer
 from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.metrics.pairwise import cosine_similarity
 
+from recipe_recommendation.dataclasses import RecipeInfo
 from recipe_recommendation.paths import FILTER_DATA_PATH
-from recipe_recommendation.recipe_info import RecipeInfo
 
 
 class ModelTemplate(ABC):
