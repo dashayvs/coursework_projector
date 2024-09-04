@@ -66,12 +66,18 @@ class WordsComparison(ModelTemplate):
         return np.array(top_5_max_values.index)
 
     def save(self, path: PathLike[str]) -> None:
-        np.save(path, self.unique_words_df)
+        unique_words_df = self.unique_words_df.copy()
+        unique_words_df = unique_words_df.applymap(
+            lambda x: ",".join(sorted(x)) if isinstance(x, set) else x
+        )
+        unique_words_df.to_csv(path, index=False)
 
     @classmethod
     def load(cls, path: PathLike[str]) -> Self:
-        model = cls()
-        model.unique_words_df = np.load(path)
+        unique_words_df = pd.read_csv(path)
+        unique_words_df = unique_words_df.applymap(lambda x: set(x.split(",")) if "," in x else x)
+        model = WordsComparison()
+        model.unique_words_df = unique_words_df
         return model
 
 
