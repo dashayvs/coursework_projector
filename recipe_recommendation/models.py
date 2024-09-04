@@ -67,7 +67,7 @@ class WordsComparison(ModelTemplate):
 
     def save(self, path: PathLike[str]) -> None:
         unique_words_df = self.unique_words_df.copy()
-        unique_words_df = unique_words_df.applymap(
+        unique_words_df = unique_words_df.map(
             lambda x: ",".join(sorted(x)) if isinstance(x, set) else x
         )
         unique_words_df.to_csv(path, index=False)
@@ -75,8 +75,8 @@ class WordsComparison(ModelTemplate):
     @classmethod
     def load(cls, path: PathLike[str]) -> Self:
         unique_words_df = pd.read_csv(path)
-        unique_words_df = unique_words_df.applymap(lambda x: set(x.split(",")) if "," in x else x)
-        model = WordsComparison()
+        unique_words_df = unique_words_df.map(lambda x: set(x.split(",")) if "," in x else x)
+        model = cls()
         model.unique_words_df = unique_words_df
         return model
 
@@ -108,7 +108,7 @@ class TfidfSimilarity(ModelTemplate):
         word_matrix = self.word_vectorizer.fit_transform(combined_text)
         char_matrix = self.char_vectorizer.fit_transform(combined_text)
 
-        self.data_embedding = hstack((word_matrix, char_matrix))
+        self.data_embedding = hstack((word_matrix, char_matrix)).toarray()
 
     def predict(self, query_object: RecipeInfo, top_k: int = 10) -> npt.NDArray[np.int64]:
         combined_query_object = [". ".join([query_object.directions, query_object.ingredients])]
@@ -116,10 +116,10 @@ class TfidfSimilarity(ModelTemplate):
         word_matrix = self.word_vectorizer.transform(combined_query_object)
         char_matrix = self.char_vectorizer.transform(combined_query_object)
 
-        query_vector = hstack((word_matrix, char_matrix))
+        query_vector = hstack((word_matrix, char_matrix)).toarray()
 
-        similarities = cosine_similarity(query_vector, self.data_embedding)
-        top_k_indices = np.argsort(similarities[0])[: -top_k + 1 : -1]
+        [similarities] = cosine_similarity(query_vector, self.data_embedding)
+        top_k_indices = np.argsort(similarities)[: -top_k - 1 : -1]
         return top_k_indices
 
     def save(self, path: PathLike[str]) -> None:
