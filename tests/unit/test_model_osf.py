@@ -1,3 +1,4 @@
+import logging
 from unittest.mock import MagicMock, patch
 
 import numpy as np
@@ -6,8 +7,20 @@ import pytest
 
 from recipe_recommendation.dataclasses import RecipeInfo
 from recipe_recommendation.models import ObjectsSimilarityFiltered
+from recipe_recommendation.paths import BEST_MODEL_PATH, FILTER_DATA_PATH
 
 DATA_EMBEDDING = np.array([[0.1, 0.2, 0.3, 0.4], [0.5, 0.6, 0.7, 0.8]])
+logger = logging.getLogger("model")
+
+# def patch_init(self):
+#     self.model = create_autospec(SentenceTransformer)
+#     self.duplicate_threshold = 0.98
+#
+#
+# @pytest.fixture
+# def model():
+#     with patch.object(ObjectsTextSimilarity, "__init__", patch_init):
+#         return ObjectsTextSimilarity()
 
 
 @pytest.fixture
@@ -93,7 +106,10 @@ def test_save_load(setup_model, tmp_path):
     instance.data_embedding = DATA_EMBEDDING
     save_path = tmp_path / "model_embedding.npy"
     instance.save(save_path)
+    logger.info(FILTER_DATA_PATH)
+    logger.info(BEST_MODEL_PATH)
     loaded_instance = ObjectsSimilarityFiltered.load(save_path)
+
     assert np.array_equal(instance.data_embedding, loaded_instance.data_embedding)
 
 
