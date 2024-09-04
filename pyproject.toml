@@ -29,7 +29,8 @@ dependencies = [
 tests = [
     "pytest",
     "ruff",
-    "mypy"
+    "mypy",
+    "unittest"
     ]
 
 [tool.mypy]
