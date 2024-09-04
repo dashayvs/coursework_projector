@@ -106,8 +106,8 @@ def test_save_load(setup_model, tmp_path):
     instance.data_embedding = DATA_EMBEDDING
     save_path = tmp_path / "model_embedding.npy"
     instance.save(save_path)
-    logger.info(FILTER_DATA_PATH)
-    logger.info(BEST_MODEL_PATH)
+    logger.error(FILTER_DATA_PATH)
+    logger.error(BEST_MODEL_PATH)
     loaded_instance = ObjectsSimilarityFiltered.load(save_path)
 
     assert np.array_equal(instance.data_embedding, loaded_instance.data_embedding)
