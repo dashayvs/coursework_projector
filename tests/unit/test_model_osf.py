@@ -42,7 +42,7 @@ def test_fit(setup_model):
     expected_count = 2
     assert instance.model.encode.call_count == expected_count
 
-    expected_embedding = np.array([[0.1, 0.2, 0.3, 0.4], [0.5, 0.6, 0.7, 0.8]])
+    expected_embedding = DATA_EMBEDDING
     data_emb = instance.data_embedding
     assert np.array_equal(data_emb, expected_embedding)
 
