@@ -87,3 +87,7 @@ def test_save_load(setup_model, tmp_path):
     instance.save(save_path)
     loaded_instance = ObjectsTextSimilarity.load(save_path)
     assert np.array_equal(instance.data_embedding, loaded_instance.data_embedding)
+
+
+if __name__ == "__main__":
+    pytest.main()

@@ -138,3 +138,7 @@ def test_save_and_load_tfidf_similarity(model_tfidf_similarity, tmp_path):
 
     loaded_model = TfidfSimilarity.load(file_path)
     assert np.array_equal(loaded_model.data_embedding, model_tfidf_similarity.data_embedding)
+
+
+if __name__ == "__main__":
+    pytest.main()

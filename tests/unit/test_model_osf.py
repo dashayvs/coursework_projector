@@ -1,4 +1,4 @@
-from unittest.mock import MagicMock
+from unittest.mock import MagicMock, patch
 
 import numpy as np
 import pandas as pd
@@ -20,9 +20,10 @@ def setup_model():
         }
     )
 
-    instance = ObjectsSimilarityFiltered()
+    with patch("pandas.read_csv") as mock_read_csv:
+        mock_read_csv.return_value = filter_data
+        instance = ObjectsSimilarityFiltered()
     instance.model = MagicMock()
-    instance.filter_data = filter_data
     return instance
 
 
@@ -94,3 +95,7 @@ def test_save_load(setup_model, tmp_path):
     instance.save(save_path)
     loaded_instance = ObjectsSimilarityFiltered.load(save_path)
     assert np.array_equal(instance.data_embedding, loaded_instance.data_embedding)
+
+
+if __name__ == "__main__":
+    pytest.main()
