@@ -55,6 +55,7 @@ class WordsComparison(ModelTemplate):
             len(self.unique_query_object[i].intersection(elem)) for i, elem in enumerate(row.values)
         )
 
+    # todo array instead pandas
     def fit(self, data: pd.DataFrame) -> None:
         self.unique_words_df = data.map(self._get_unique_words)
 
