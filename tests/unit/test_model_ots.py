@@ -26,7 +26,7 @@ def patch_init(self):
 
 @pytest.fixture
 def model():
-    with patch.object(ObjectsTextSimilarity, "__init__", patch_init):
+    with patch("recipe_recommendation.models.SentenceTransformer"):
         return ObjectsTextSimilarity()
 
 
@@ -35,7 +35,9 @@ def query_object():
     return RecipeInfo("recipe", "ingredients")
 
 
-def test_fit(model):
+@patch("recipe_recommendation.models.SentenceTransformer", create_autospec(SentenceTransformer))
+def test_fit():
+    model = ObjectsTextSimilarity()
     model.model.encode.side_effect = [
         [[0.1, 0.2], [0.5, 0.6], [0.11, 0.11], [0.12, 0.12], [0.13, 0.13]],
         [[0.3, 0.4], [0.7, 0.8], [0.11, 0.11], [0.12, 0.12], [0.13, 0.13]],
@@ -62,6 +64,7 @@ def test_fit(model):
     assert np.array_equal(data_emb, expected_embedding)
 
 
+@patch("recipe_recommendation.models.SentenceTransformer", create_autospec(SentenceTransformer))
 @pytest.mark.parametrize(
     ("filter_ind", "top_k", "similarities"),
     [
@@ -70,7 +73,8 @@ def test_fit(model):
         (np.array([0, 1, 2, 3, 4]), 2, [0.55, 0.45, 0.8, 0.7, 0.6]),
     ],
 )
-def test_predict(model, query_object, filter_ind, top_k, similarities):
+def test_predict(query_object, filter_ind, top_k, similarities):
+    model = ObjectsTextSimilarity()
     model.model.encode.side_effect = [[0.1, 0.2], [0.3, 0.6]]
     model.model.similarity.return_value.numpy.return_value = [np.array(similarities)]
 
