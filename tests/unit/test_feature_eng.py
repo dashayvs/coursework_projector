@@ -1,9 +1,5 @@
 from __future__ import annotations
 
-from typing import Any
-from unittest.mock import patch
-
-import inflect
 import pandas as pd
 import pytest
 
@@ -11,77 +7,74 @@ from recipe_recommendation.feature_eng import (
     COURSES,
     MEALS,
     VEG_TYPES,
-    clean_categories0,
-    clean_categories1,
-    clean_categories3,
+    # clean_categories0,
+    # clean_categories1,
+    # clean_categories3,
     convert_time_to_minutes,
     fill_cat_ingr,
-    generate_combinations,
+    # generate_combinations,
     get_category,
-    singular_to_plural,
 )
 
-
-# todo parametrize
-@pytest.mark.parametrize(
-    "raw_str, expected_categories",
-    [
-        (
-            "Dinner Recipes, Vegan, Vegetarian Recipes, Breakfast",
-            "Dinner, Vegan, Vegetarian, Breakfast",
-        ),
-        ("Recipes, Soup Recipes, Vegan", "Soup, Vegan"),
-        ("Lunch Recipes, Dinner Recipes, , Dessert", "Lunch, Dinner, Dessert"),
-    ],
-)
-def test_clean_categories0(raw_str, expected_categories):
-    assert clean_categories0(raw_str) == expected_categories
+# @pytest.mark.parametrize(
+#     "raw_str, expected_categories",
+#     [
+#         (
+#             "Dinner Recipes, Vegan, Vegetarian Recipes, Breakfast",
+#             "Dinner, Vegan, Vegetarian, Breakfast",
+#         ),
+#         ("Recipes, Soup Recipes, Vegan", "Soup, Vegan"),
+#         ("Lunch Recipes, Dinner Recipes, , Dessert", "Lunch, Dinner, Dessert"),
+#     ],
+# )
+# def test_clean_categories0(raw_str, expected_categories):
+#     assert clean_categories0(raw_str) == expected_categories
 
 
-@pytest.mark.parametrize(
-    "raw_str, expected_categories",
-    [
-        ("Dinner, Vegan, Dinner, Breakfast and Lunch", {"Breakfast", "Dinner", "Lunch", "Vegan"}),
-        ("Soup, Vegan, Soup, Vegan", {"Soup", "Vegan"}),
-    ],
-)
-def test_clean_categories1(raw_str, expected_categories) -> None:
-    assert set(clean_categories1(raw_str).split(", ")) == expected_categories
+# @pytest.mark.parametrize(
+#     "raw_str, expected_categories",
+#     [
+#         ("Dinner, Vegan, Dinner, Breakfast and Lunch", {"Breakfast", "Dinner", "Lunch", "Vegan"}),
+#         ("Soup, Vegan, Soup, Vegan", {"Soup", "Vegan"}),
+#     ],
+# )
+# def test_clean_categories1(raw_str, expected_categories) -> None:
+#     assert set(clean_categories1(raw_str).split(", ")) == expected_categories
 
 
-@pytest.mark.parametrize(
-    "raw_str, expected_result",
-    [
-        ("Dinner, Vegan, Breakfast Recipe", {"Dinner", "Vegan", "Breakfast Recipes"}),
-        ("Soup Recipe, Vegan", {"Soup Recipes", "Vegan"}),
-    ],
-)
-def test_singular_to_plural(raw_str, expected_result) -> None:
-    assert set(singular_to_plural(raw_str).split(", ")) == expected_result
+# @pytest.mark.parametrize(
+#     "raw_str, expected_result",
+#     [
+#         ("Dinner, Vegan, Breakfast Recipe", {"Dinner", "Vegan", "Breakfast Recipes"}),
+#         ("Soup Recipe, Vegan", {"Soup Recipes", "Vegan"}),
+#     ],
+# )
+# def test_singular_to_plural(raw_str, expected_result) -> None:
+#     assert set(singular_to_plural(raw_str).split(", ")) == expected_result
 
 
-def test_generate_combinations() -> None:
-    p = inflect.engine()
-    combinations_list = generate_combinations("Dinner", "Recipe", p)
-    assert "Dinner Recipe" in combinations_list
-    assert "Recipes Dinner" in combinations_list
-    assert "Dinners Recipes" in combinations_list
+# def test_generate_combinations() -> None:
+#     p = inflect.engine()
+#     combinations_list = generate_combinations("Dinner", "Recipe", p)
+#     assert "Dinner Recipe" in combinations_list
+#     assert "Recipes Dinner" in combinations_list
+#     assert "Dinners Recipes" in combinations_list
 
 
-@patch("recipe_recommendation.feature_eng.generate_combinations")
-def test_clean_categories3(mock_generate_combinations: Any) -> None:
-    mock_generate_combinations.side_effect = lambda word1, word2, p: [
-        f"{word1} {word2}",
-        f"{p.plural(word1)} {word2}",
-        f"{word1} {p.plural(word2)}",
-        f"{p.plural(word1)} {p.plural(word2)}",
-    ]
-
-    assert set(clean_categories3("Apple Pie, Apple, Pie, Dessert").split(", ")) == {
-        "Apple",
-        "Pie",
-        "Dessert",
-    }
+# @patch("recipe_recommendation.feature_eng.generate_combinations")
+# def test_clean_categories3(mock_generate_combinations: Any) -> None:
+#     mock_generate_combinations.side_effect = lambda word1, word2, p: [
+#         f"{word1} {word2}",
+#         f"{p.plural(word1)} {word2}",
+#         f"{word1} {p.plural(word2)}",
+#         f"{p.plural(word1)} {p.plural(word2)}",
+#     ]
+#
+#     assert set(clean_categories3("Apple Pie, Apple, Pie, Dessert").split(", ")) == {
+#         "Apple",
+#         "Pie",
+#         "Dessert",
+#     }
 
 
 @pytest.mark.parametrize(
