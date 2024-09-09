@@ -5,28 +5,23 @@ from recipe_recommendation.feature_eng import (
     COURSES,
     MEALS,
     VEG_TYPES,
-    clean_categories0,
-    clean_categories1,
-    clean_categories3,
-    clean_categories4,
     convert_time_to_minutes,
     fill_cat_ingr,
+    filter_out_combined_categories,
     get_category,
     get_ingr_cat,
     get_type_cooking_batch,
-    singular_to_plural,
+    normalize_categories,
+    split_elements_by_categories,
 )
 from recipe_recommendation.paths import RAW_RECIPES_PATH
 
 data = pd.read_csv(RAW_RECIPES_PATH)
 
-data["Categories"] = (
-    data["Categories"]
-    .apply(clean_categories0)
-    .apply(clean_categories1)
-    .apply(singular_to_plural)
-    .apply(clean_categories3)
-    .apply(clean_categories4)
+data["Categories"] = data["Categories"].apply(
+    lambda row: split_elements_by_categories(
+        filter_out_combined_categories(normalize_categories(row))
+    )
 )
 
 train_data = pd.DataFrame()
