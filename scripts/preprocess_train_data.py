@@ -18,10 +18,11 @@ from recipe_recommendation.paths import RAW_RECIPES_PATH
 
 data = pd.read_csv(RAW_RECIPES_PATH)
 
-data["Categories"] = data["Categories"].apply(
-    lambda row: split_elements_by_categories(
-        filter_out_combined_categories(normalize_categories(row))
-    )
+data["Categories"] = (
+    data["Categories"]
+    .transform(normalize_categories)
+    .transform(filter_out_combined_categories)
+    .transform(split_elements_by_categories)
 )
 
 train_data = pd.DataFrame()
