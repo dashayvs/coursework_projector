@@ -37,8 +37,8 @@ train_data["time, mins"] = data["Total Time"].apply(convert_time_to_minutes)
 train_data[["Vegetables", "Fruits", "Meat", "Mushrooms", "Dairy", "Grains", "Nuts"]] = 0
 train_data["Cooking Methods"] = get_type_cooking_batch(data["Directions"].tolist())
 
-result_ingredients = list(data["Ingr"].apply(get_ingr_cat))
-train_data = train_data.apply(lambda row: fill_cat_ingr(row, result_ingredients[row.name]), axis=1)
+recipe_ingredients = list(data["Ingr"].apply(get_ingr_cat))
+train_data = train_data.apply(lambda row: fill_cat_ingr(row, recipe_ingredients[row.name]), axis=1)
 
 new_order = [
     "Calories",

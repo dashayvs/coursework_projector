@@ -160,6 +160,6 @@ def get_ingr_cat(ingredients: str) -> list[str]:
     return res_cat_ingr
 
 
-def fill_cat_ingr(row: "pd.Series[float]", result_ingr: list[str]) -> "pd.Series[float]":
-    row[result_ingr] = 1
+def fill_cat_ingr(row: "pd.Series[float]", recipe_ingr: list[str]) -> "pd.Series[float]":
+    row[recipe_ingr] = 1
     return row
